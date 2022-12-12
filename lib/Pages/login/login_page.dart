@@ -98,7 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
 //where _email and _password were simply what the user typed in the textfields.
 
-              if (_authenticatedUser.isEmailVerified) {
+              if (_authenticatedUser.user!.emailVerified) {
                 Navigator.of(context).pushReplacement(MaterialPageRoute(
                     builder: (context) => const bottomButton()));
                 //Verified

@@ -38,12 +38,11 @@ dependencies:
   liquid_swipe: ^2.0.0
   get_storage:
   get:
-  firebase_auth:
+  firebase_auth: ^4.1.2
   riverpod:
   flutter_riverpod:
   flutter_rating_bar: ^4.0.0
-  firebase_core_platform_interface: 4.5.1
-  firebase_core:
+  firebase_core: ^2.2.0
   cloud_firestore:
   firebase_storage:
   image_picker: ^0.8.6

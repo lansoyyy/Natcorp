@@ -306,8 +306,7 @@ class _RegistrationScreenState extends State<ResumeScreen> {
 
   postDetailsToFirestore() async {
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-    FirebaseAuth.instance.currentUser();
-    user = _auth.currentUser;
+    User? user = _auth.currentUser;
 
     UserModel userModel = UserModel();
 
