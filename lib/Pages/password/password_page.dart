@@ -18,7 +18,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     final emailField = TextFormField(
       autofocus: false,
       controller: _emailController,
-      keyboardType: TextInputType.emailAddress,
+      keyboardType: TextInputType.datetime,
       validator: (value) {
         if (value!.isEmpty) {
           return ("Please Enter Your Email");

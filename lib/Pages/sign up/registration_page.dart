@@ -19,13 +19,15 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   //form key
   final _formKey = GlobalKey<FormState>();
 
+  var _value = false;
+
   //editing Controller
   final firstName = TextEditingController();
   final secondName = TextEditingController();
   final email = TextEditingController();
   final password = TextEditingController();
   final confirmpassword = TextEditingController();
-
+  final birthdate = TextEditingController();
   @override
   Widget build(BuildContext context) {
     //first field
@@ -75,6 +77,30 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           prefixIcon: const Icon(Icons.account_circle),
           contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
           hintText: "Last Name",
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+          )),
+    );
+
+    //last field
+    final birthdateField = TextFormField(
+      autofocus: false,
+      controller: birthdate,
+      keyboardType: TextInputType.datetime,
+      validator: (value) {
+        if (value!.isEmpty) {
+          return ("Birthdate cannot be Empty");
+        }
+        return null;
+      },
+      onSaved: (value) {
+        birthdate.text = value!;
+      },
+      textInputAction: TextInputAction.next,
+      decoration: InputDecoration(
+          prefixIcon: const Icon(Icons.date_range),
+          contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+          hintText: "Birthdate",
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
           )),
@@ -164,6 +190,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
     //sign up button
 
+    var isVisible = false;
+
     final signUpButton = Material(
       elevation: 5,
       borderRadius: BorderRadius.circular(30),
@@ -234,36 +262,48 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     const SizedBox(height: 15),
                     secondNameField,
                     const SizedBox(height: 15),
+                    birthdateField,
+                    const SizedBox(height: 15),
                     emailField,
                     const SizedBox(height: 15),
                     passwordField,
                     const SizedBox(height: 15),
                     confirmField,
                     const SizedBox(height: 15),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const AgreementScreen()));
-                          },
-                          child: const Text(
-                            "By signing up on Work@NatCorp \n you agree to our Terms &\n Condition and Privacy Policy",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: Colors.red,
-                                fontWeight: FontWeight.normal,
-                                fontSize: 13),
-                          ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const AgreementScreen()));
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 0, right: 0),
+                        child: SizedBox(
+                          width: 400,
+                          child: CheckboxListTile(
+                              checkColor: Colors.black,
+                              selectedTileColor: Colors.black,
+                              controlAffinity: ListTileControlAffinity.leading,
+                              title: const Text(
+                                "By signing up on Work@NatCorp \n you agree to our Terms &\n Condition and Privacy Policy",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 13),
+                              ),
+                              value: _value,
+                              onChanged: (newValue) {
+                                setState(() {
+                                  _value = !_value;
+                                });
+                              }),
                         ),
-                      ],
+                      ),
                     ),
-                    const SizedBox(height: 20),
-                    signUpButton,
+                    const SizedBox(height: 10),
+                    Visibility(visible: _value, child: signUpButton),
                     const SizedBox(height: 15)
                   ],
                 ),
@@ -301,6 +341,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     userModel.uid = user.uid;
     userModel.firstName = firstName.text;
     userModel.secondName = secondName.text;
+    userModel.birthdate = birthdate.text;
 
     await firebaseFirestore
         .collection("users")
