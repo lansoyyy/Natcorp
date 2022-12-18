@@ -119,7 +119,7 @@ class _RegistrationScreenState extends State<ResumeScreen> {
       },
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
-          prefixIcon: const Icon(Icons.email),
+          prefixIcon: const Icon(Icons.location_on_rounded),
           contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
           hintText: "Present Address",
           border: OutlineInputBorder(

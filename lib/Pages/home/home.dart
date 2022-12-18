@@ -3,7 +3,6 @@ import 'package:natcorp/Pages/home/widgets/home_app_bar.dart';
 import 'package:natcorp/Pages/home/widgets/job_list.dart';
 import 'package:natcorp/Pages/home/widgets/nat_corp_details.dart';
 import 'package:natcorp/Pages/home/widgets/search_card.dart';
-import 'package:natcorp/Pages/home/widgets/tag_list.dart';
 import 'package:natcorp/Pages/home/widgets/work.dart';
 
 class HomePage extends StatefulWidget {
