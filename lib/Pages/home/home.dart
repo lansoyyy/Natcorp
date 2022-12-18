@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:natcorp/Pages/home/widgets/home_app_bar.dart';
 import 'package:natcorp/Pages/home/widgets/job_list.dart';
-import 'package:natcorp/Pages/home/widgets/nat.dart';
-import 'package:natcorp/Pages/home/widgets/nat_corp.dart';
 import 'package:natcorp/Pages/home/widgets/nat_corp_details.dart';
 import 'package:natcorp/Pages/home/widgets/search_card.dart';
 import 'package:natcorp/Pages/home/widgets/tag_list.dart';
@@ -42,7 +40,9 @@ class _HomePageState extends State<HomePage> {
                 TagList(),
                 NatCorpDetails(),
                 Work(),
-                JobList(),
+                JobList(
+                  jobType: '',
+                ),
               ],
             ),
           ),

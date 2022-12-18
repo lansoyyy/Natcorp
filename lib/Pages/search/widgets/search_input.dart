@@ -5,7 +5,7 @@ class SearchInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(25),
+      margin: const EdgeInsets.all(25),
       child: Row(
         children: [
           Expanded(
@@ -19,13 +19,13 @@ class SearchInput extends StatelessWidget {
                   borderSide: BorderSide.none,
                 ),
                 hintText: 'Search',
-                hintStyle: TextStyle(
+                hintStyle: const TextStyle(
                   color: Colors.grey,
                   fontSize: 18,
                 ),
                 contentPadding: EdgeInsets.zero,
                 prefixIcon: Container(
-                  padding: EdgeInsets.all(15),
+                  padding: const EdgeInsets.all(15),
                   child: Image.asset(
                     'assets/icons/search.png',
                     width: 20,
@@ -34,7 +34,7 @@ class SearchInput extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
         ],
       ),
     );
