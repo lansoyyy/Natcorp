@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:natcorp/Pages/mainButtom/bottom_page.dart';
 import 'package:natcorp/Pages/sign%20up/model/user_model.dart';
+import 'package:natcorp/widgets/text_widget.dart';
 
 class ResumeScreen extends StatefulWidget {
   const ResumeScreen({Key? key}) : super(key: key);
@@ -19,12 +20,17 @@ class _RegistrationScreenState extends State<ResumeScreen> {
 
   //editing Controller
   final firstName = TextEditingController();
+
+  final pos = TextEditingController();
   final secondName = TextEditingController();
   final lastName = TextEditingController();
   final email = TextEditingController();
   final age = TextEditingController();
   final address = TextEditingController();
   final num = TextEditingController();
+
+  late String gender = 'Male';
+  final List<bool> _isSelected = [true, false];
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +57,33 @@ class _RegistrationScreenState extends State<ResumeScreen> {
           prefixIcon: const Icon(Icons.account_circle),
           contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
           hintText: "First Name",
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+          )),
+    );
+
+    final posDesired = TextFormField(
+      autofocus: false,
+      controller: pos,
+      keyboardType: TextInputType.name,
+      validator: (value) {
+        RegExp regExp = RegExp(r'^.{3,}$');
+        if (value!.isEmpty) {
+          return ("Position Desired cannot be Empty");
+        }
+        if (!regExp.hasMatch(value)) {
+          return ("Enter Position Desired");
+        }
+        return null;
+      },
+      onSaved: (value) {
+        pos.text = value!;
+      },
+      textInputAction: TextInputAction.next,
+      decoration: InputDecoration(
+          prefixIcon: const Icon(Icons.work_outline_rounded),
+          contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+          hintText: "Position Desired",
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
           )),
@@ -279,9 +312,48 @@ class _RegistrationScreenState extends State<ResumeScreen> {
                     Address,
                     const SizedBox(height: 15),
                     Number,
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    TextRegular(
+                        text: 'Gender', fontSize: 14, color: Colors.grey),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    ToggleButtons(
+                        borderRadius: BorderRadius.circular(5),
+                        splashColor: Colors.grey,
+                        color: Colors.black,
+                        selectedColor: Colors.blue,
+                        onPressed: (int newIndex) {
+                          setState(() {
+                            for (int index = 0;
+                                index < _isSelected.length;
+                                index++) {
+                              if (index == newIndex) {
+                                _isSelected[index] = true;
+                                if (_isSelected[0] == true) {
+                                  gender = 'Male';
+                                } else {
+                                  gender = 'Female';
+                                }
+                              } else {
+                                _isSelected[index] = false;
+                              }
+                            }
+                          });
+                        },
+                        isSelected: _isSelected,
+                        children: const [
+                          Icon(Icons.male),
+                          Icon(Icons.female),
+                        ]),
+                    const SizedBox(height: 15),
+                    posDesired,
+                    const SizedBox(height: 15),
                     const SizedBox(height: 30),
                     signUpButton,
-                    const SizedBox(height: 15)
+                    const SizedBox(height: 15),
                   ],
                 ),
               ),
