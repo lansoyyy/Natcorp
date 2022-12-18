@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:natcorp/Pages/login/login_page.dart';
+import 'package:natcorp/Pages/home/home.dart';
 import 'package:natcorp/firebase_options.dart';
 
 Future<void> main() async {
@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.green)
             .copyWith(secondary: const Color(0xFFFED408)),
       ),
-      home: const LoginScreen(),
+      home: HomePage(),
     );
   }
 }
