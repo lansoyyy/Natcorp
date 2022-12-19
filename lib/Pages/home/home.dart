@@ -84,6 +84,7 @@ class _HomePageState extends State<HomePage> {
                 NatCorpDetails(),
                 Work(),
                 JobList(
+                  inNotif: false,
                   jobType: '',
                 ),
               ],

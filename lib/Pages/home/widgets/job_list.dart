@@ -7,8 +7,9 @@ class JobList extends StatelessWidget {
   final jobList = Job.generateJobs();
 
   late String jobType;
+  late bool? inNotif;
 
-  JobList({required this.jobType});
+  JobList({required this.jobType, required this.inNotif});
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -26,7 +27,10 @@ class JobList extends StatelessWidget {
                       context: context,
                       builder: (context) => JobDetail(jobList[index]));
                 },
-                child: JobItem(jobList[index])),
+                child: JobItem(
+                  jobList[index],
+                  inNotif: inNotif!,
+                )),
             separatorBuilder: (_, index) => const SizedBox(
                   height: 15,
                 ),

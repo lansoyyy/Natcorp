@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:natcorp/Pages/notif/notif_page.dart';
 
 class HomeAppBar extends StatelessWidget {
   @override
@@ -34,7 +35,8 @@ class HomeAppBar extends StatelessWidget {
             children: [
               GestureDetector(
                 onTap: () {
-                  print('printed');
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const NotifPage()));
                 },
                 child: Container(
                   margin: const EdgeInsets.only(top: 30, right: 25),
@@ -54,7 +56,7 @@ class HomeAppBar extends StatelessWidget {
                           decoration: const BoxDecoration(
                               color: Colors.red, shape: BoxShape.circle),
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),

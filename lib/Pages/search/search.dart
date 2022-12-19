@@ -121,6 +121,7 @@ class _SearchPageState extends State<SearchPage> {
               ), // search and yellow filter
               Expanded(
                   child: JobList(
+                inNotif: false,
                 jobType: '',
               )),
             ],
