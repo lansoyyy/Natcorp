@@ -14,7 +14,7 @@ class HomeAppBar extends StatelessWidget {
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+            children: const [
               Text(
                 'Welcome home',
                 style:
@@ -32,29 +32,34 @@ class HomeAppBar extends StatelessWidget {
           //Notification
           Row(
             children: [
-              Container(
-                margin: EdgeInsets.only(top: 30, right: 25),
-                transform: Matrix4.rotationZ(100),
-                child: Stack(
-                  children: [
-                    Icon(
-                      Icons.notifications_none_outlined,
-                      size: 30,
-                      color: Colors.grey,
-                    ),
-                    Positioned(
-                      top: 0,
-                      right: 0,
-                      child: Container(
-                        padding: EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                            color: Colors.red, shape: BoxShape.circle),
+              GestureDetector(
+                onTap: () {
+                  print('printed');
+                },
+                child: Container(
+                  margin: const EdgeInsets.only(top: 30, right: 25),
+                  transform: Matrix4.rotationZ(100),
+                  child: Stack(
+                    children: [
+                      const Icon(
+                        Icons.notifications_none_outlined,
+                        size: 30,
+                        color: Colors.grey,
                       ),
-                    )
-                  ],
+                      Positioned(
+                        top: 0,
+                        right: 0,
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: const BoxDecoration(
+                              color: Colors.red, shape: BoxShape.circle),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 10,
               ),
             ],
