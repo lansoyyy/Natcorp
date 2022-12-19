@@ -42,20 +42,11 @@ class HomeAppBar extends StatelessWidget {
                   margin: const EdgeInsets.only(top: 30, right: 25),
                   transform: Matrix4.rotationZ(100),
                   child: Stack(
-                    children: [
-                      const Icon(
+                    children: const [
+                      Icon(
                         Icons.notifications_none_outlined,
                         size: 30,
                         color: Colors.grey,
-                      ),
-                      Positioned(
-                        top: 0,
-                        right: 0,
-                        child: Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: const BoxDecoration(
-                              color: Colors.red, shape: BoxShape.circle),
-                        ),
                       ),
                     ],
                   ),
