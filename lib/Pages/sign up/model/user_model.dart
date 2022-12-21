@@ -25,7 +25,8 @@ class UserModel {
       'email': email,
       'firstName': firstName,
       'secondName': secondName,
-      'birthdate': birthdate
+      'birthdate': birthdate,
+      'profile': 'https://cdn-icons-png.flaticon.com/512/668/668709.png'
     };
   }
 }
