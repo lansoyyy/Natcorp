@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:natcorp/Pages/home/home.dart';
+import 'package:natcorp/Pages/login/login_page.dart';
+import 'package:natcorp/Pages/mainButtom/bottom_page.dart';
 import 'package:natcorp/firebase_options.dart';
 
 Future<void> main() async {
@@ -25,7 +28,15 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.green)
             .copyWith(secondary: const Color(0xFFFED408)),
       ),
-      home: HomePage(),
+      home: StreamBuilder<User?>(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return const bottomButton();
+            } else {
+              return const LoginScreen();
+            }
+          }),
     );
   }
 }
