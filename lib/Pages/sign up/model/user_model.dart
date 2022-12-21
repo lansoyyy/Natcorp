@@ -26,7 +26,21 @@ class UserModel {
       'firstName': firstName,
       'secondName': secondName,
       'birthdate': birthdate,
-      'profile': 'https://cdn-icons-png.flaticon.com/512/668/668709.png'
+      'profile': 'https://cdn-icons-png.flaticon.com/512/668/668709.png',
+      'files': {
+        'NSO': '',
+        'NBI': '',
+        'Diploma': '',
+        'COE': '',
+        'SSS': '',
+        'Philhealth': '',
+        'Pag-ibig': '',
+        'TIN': '',
+        'TOR': '',
+        'Brgy. Clearance': '',
+        'Police Clearance': '',
+        'Vaccine Card': '',
+      }
     };
   }
 }
