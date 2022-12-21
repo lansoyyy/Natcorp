@@ -8,25 +8,27 @@ class FilesScreen extends StatelessWidget {
     final formKey = GlobalKey<FormState>();
     return Scaffold(
         backgroundColor: Colors.white,
-        body: Container(
-          color: Colors.white,
-          child: Padding(
-            padding: const EdgeInsets.all(36.0),
-            child: Form(
-              key: formKey,
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Center(
-                      child: SizedBox(
-                        height: 150,
-                        child:
-                            Image.asset("assets/logo.png", fit: BoxFit.contain),
+        body: SingleChildScrollView(
+          child: Container(
+            color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(36.0),
+              child: Form(
+                key: formKey,
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Center(
+                        child: SizedBox(
+                          height: 150,
+                          child: Image.asset("assets/logo.png",
+                              fit: BoxFit.contain),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 20),
-                  ]),
+                      const SizedBox(height: 20),
+                    ]),
+              ),
             ),
           ),
         ));
