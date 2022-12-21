@@ -272,7 +272,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   });
 
                                   await FirebaseAuth.instance.currentUser!
-                                      .updateEmail(emailController.text.trim());
+                                      .updateEmail(emailController.text == ''
+                                          ? data['email']
+                                          : emailController.text.trim());
 
                                   await FirebaseAuth.instance.currentUser!
                                       .updatePassword(
