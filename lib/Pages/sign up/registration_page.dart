@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:natcorp/Pages/mainButtom/bottom_page.dart';
 import 'package:natcorp/Pages/sign%20up/model/user_model.dart';
 import 'package:natcorp/widgets/agreement_page.dart';
 import 'package:natcorp/widgets/verification_page.dart';
@@ -206,6 +205,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   .createUserWithEmailAndPassword(
                       email: email.text, password: password.text)
                   .then((_) {
+                postDetailsToFirestore();
                 Navigator.of(context).pushReplacement(
                     MaterialPageRoute(builder: (context) => VerifyScreen()));
               });
@@ -272,6 +272,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     const SizedBox(height: 15),
                     GestureDetector(
                       onTap: () {
+                        signUp(email.text, password.text);
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -349,9 +350,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         .set(userModel.toMap());
     Fluttertoast.showToast(msg: "Account created successfully :) ");
 
-    Navigator.pushAndRemoveUntil(
-        (context),
-        MaterialPageRoute(builder: (context) => const bottomButton()),
-        (route) => false);
+    // Navigator.pushAndRemoveUntil(
+    //     (context),
+    //     MaterialPageRoute(builder: (context) => const bottomButton()),
+    //     (route) => false);
   }
 }
