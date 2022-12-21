@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:natcorp/Pages/home/home.dart';
 import 'package:natcorp/Pages/login/login_page.dart';
 import 'package:natcorp/Pages/mainButtom/bottom_page.dart';
 import 'package:natcorp/firebase_options.dart';
@@ -22,7 +21,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Natcorp',
       theme: ThemeData(
         primaryColor: const Color(0xFF43B1B7),
         colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.green)
