@@ -1,9 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:natcorp/Pages/login/login_page.dart';
 import 'package:natcorp/widgets/text_widget.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as path;
+import 'dart:io';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -24,6 +29,84 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final emailController = TextEditingController();
 
   final passwordController = TextEditingController();
+
+  firebase_storage.FirebaseStorage storage =
+      firebase_storage.FirebaseStorage.instance;
+
+  late String fileName = '';
+
+  late File imageFile;
+
+  late String imageURL = '';
+
+  Future<void> uploadPicture(String inputSource) async {
+    final picker = ImagePicker();
+    XFile pickedImage;
+    try {
+      pickedImage = (await picker.pickImage(
+          source: inputSource == 'camera'
+              ? ImageSource.camera
+              : ImageSource.gallery,
+          maxWidth: 1920))!;
+
+      fileName = path.basename(pickedImage.path);
+      imageFile = File(pickedImage.path);
+
+      try {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) => Padding(
+            padding: const EdgeInsets.only(left: 30, right: 30),
+            child: AlertDialog(
+                title: Row(
+              children: const [
+                CircularProgressIndicator(
+                  color: Colors.black,
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                Text(
+                  'Loading . . .',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'QRegular'),
+                ),
+              ],
+            )),
+          ),
+        );
+
+        await firebase_storage.FirebaseStorage.instance
+            .ref('Profile/$fileName')
+            .putFile(imageFile);
+        imageURL = await firebase_storage.FirebaseStorage.instance
+            .ref('Profile/$fileName')
+            .getDownloadURL();
+
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .update({
+          'profile': imageURL,
+        });
+
+        Fluttertoast.showToast(msg: "Profile Updated Succesfully!");
+
+        Navigator.of(context).pop();
+      } on firebase_storage.FirebaseException catch (error) {
+        if (kDebugMode) {
+          print(error);
+        }
+      }
+    } catch (err) {
+      if (kDebugMode) {
+        print(err);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -129,18 +212,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               Positioned(
                                 bottom: 0,
                                 right: 0,
-                                child: Container(
-                                  height: 40,
-                                  width: 40,
-                                  decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                          width: 4,
-                                          color: Theme.of(context)
-                                              .scaffoldBackgroundColor),
-                                      color: Colors.green),
-                                  child: const Icon(Icons.edit,
-                                      color: Colors.white),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    uploadPicture('gallery');
+                                  },
+                                  child: Container(
+                                    height: 40,
+                                    width: 40,
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                            width: 4,
+                                            color: Theme.of(context)
+                                                .scaffoldBackgroundColor),
+                                        color: Colors.green),
+                                    child: const Icon(Icons.edit,
+                                        color: Colors.white),
+                                  ),
                                 ),
                               ),
                             ],
