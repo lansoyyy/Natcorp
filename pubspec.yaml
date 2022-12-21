@@ -48,6 +48,7 @@ dependencies:
   image_picker: ^0.8.6
   badges:
   firebase_core_platform_interface: 4.5.1
+  persistent_bottom_nav_bar:
 
 dev_dependencies:
   flutter_test:
