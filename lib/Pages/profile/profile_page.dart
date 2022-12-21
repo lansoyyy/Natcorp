@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:natcorp/Pages/login/login_page.dart';
 import 'package:natcorp/widgets/text_widget.dart';
 
@@ -16,6 +17,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
       .collection('users')
       .doc(FirebaseAuth.instance.currentUser!.uid)
       .snapshots();
+
+  final fnameController = TextEditingController();
+
+  final snameController = TextEditingController();
+  final emailController = TextEditingController();
+
+  final passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -139,10 +147,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ),
                         const SizedBox(height: 25),
-                        newMethod("First Name", data['firstName'], false),
-                        newMethod("Last Name", data['secondName'], false),
-                        newMethod("Email Address", data['email'], false),
-                        // newMethod("Password", "******", true),
+                        newMethod("First Name", data['firstName'], false,
+                            fnameController),
+                        newMethod("Last Name", data['secondName'], false,
+                            snameController),
+                        newMethod("Email Address", data['email'], false,
+                            emailController),
+                        newMethod(
+                            "Password", "********", true, passwordController),
                         const SizedBox(height: 0),
                         Padding(
                           padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
@@ -153,7 +165,49 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             child: MaterialButton(
                               padding: const EdgeInsets.all(15.0),
                               minWidth: MediaQuery.of(context).size.width,
-                              onPressed: () {},
+                              onPressed: () async {
+                                try {
+                                  FirebaseFirestore.instance
+                                      .collection('users')
+                                      .doc(FirebaseAuth
+                                          .instance.currentUser!.uid)
+                                      .update({
+                                    'firstName': fnameController.text == ''
+                                        ? data['firstName']
+                                        : fnameController.text,
+                                    'secondName': snameController.text == ''
+                                        ? data['secondName']
+                                        : snameController.text,
+                                    'email': emailController.text == ''
+                                        ? data['email']
+                                        : emailController.text,
+                                  });
+
+                                  await FirebaseAuth.instance.currentUser!
+                                      .updateEmail(emailController.text.trim());
+
+                                  await FirebaseAuth.instance.currentUser!
+                                      .updatePassword(
+                                          passwordController.text.trim());
+
+                                  await FirebaseAuth.instance.currentUser!
+                                      .reauthenticateWithCredential(
+                                          EmailAuthProvider.credential(
+                                              email:
+                                                  emailController.text.trim(),
+                                              password: passwordController.text
+                                                  .trim()));
+
+                                  emailController.clear();
+                                  passwordController.clear();
+                                  fnameController.clear();
+                                  snameController.clear();
+                                  Fluttertoast.showToast(
+                                      msg: "Saved Succesfully!");
+                                } catch (e) {
+                                  Fluttertoast.showToast(msg: e.toString());
+                                }
+                              },
                               child: const Text(
                                 "Saved",
                                 textAlign: TextAlign.center,
@@ -169,11 +223,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
             }));
   }
 
-  Padding newMethod(
-      String labelText, String placeholder, bool isPasswordTextField) {
+  Padding newMethod(String labelText, String placeholder,
+      bool isPasswordTextField, controller) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(36, 15, 36, 10),
       child: TextField(
+        controller: controller,
         obscureText: isPasswordTextField,
         decoration: InputDecoration(
             contentPadding: const EdgeInsets.only(bottom: 6),
