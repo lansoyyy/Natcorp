@@ -36,7 +36,7 @@ class UserModel {
       'Pag-ibig': '',
       'TIN': '',
       'TOR': '',
-      'Brgy. Clearance': '',
+      'Brgy Clearance': '',
       'Police Clearance': '',
       'Vaccine Card': '',
     };

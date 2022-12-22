@@ -25,9 +25,9 @@ class _FilesScreenState extends State<FilesScreen> {
     'Pag-ibig',
     'TIN',
     'TOR',
-    // 'Brgy. Clearance',
-    // 'Police Clearance',
-    // 'Vaccine Card'
+    'Brgy Clearance',
+    'Police Clearance',
+    'Vaccine Card',
   ];
 
   firebase_storage.FirebaseStorage storage =
@@ -159,6 +159,7 @@ class _FilesScreenState extends State<FilesScreen> {
                             child: ListView.builder(
                                 itemCount: filesList.length,
                                 itemBuilder: ((context, index) {
+                                  print(data[filesList[index]]);
                                   return Padding(
                                     padding:
                                         const EdgeInsets.fromLTRB(0, 5, 0, 5),
@@ -184,8 +185,6 @@ class _FilesScreenState extends State<FilesScreen> {
                                           ),
                                           GestureDetector(
                                             onTap: () {
-                                              print(filesList[index]);
-
                                               uploadPicture(
                                                   'gallery', filesList[index]);
                                             },
