@@ -25,9 +25,9 @@ class _FilesScreenState extends State<FilesScreen> {
     'Pag-ibig',
     'TIN',
     'TOR',
-    'Brgy. Clearance',
-    'Police Clearance',
-    'Vaccine Card'
+    // 'Brgy. Clearance',
+    // 'Police Clearance',
+    // 'Vaccine Card'
   ];
 
   firebase_storage.FirebaseStorage storage =
@@ -108,6 +108,11 @@ class _FilesScreenState extends State<FilesScreen> {
     }
   }
 
+  final Stream<DocumentSnapshot> userData = FirebaseFirestore.instance
+      .collection('users')
+      .doc(FirebaseAuth.instance.currentUser!.uid)
+      .snapshots();
+
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
@@ -116,7 +121,7 @@ class _FilesScreenState extends State<FilesScreen> {
         body: Container(
           color: Colors.white,
           child: Padding(
-            padding: const EdgeInsets.all(36.0),
+            padding: const EdgeInsets.all(10.0),
             child: Form(
               key: formKey,
               child: Column(
@@ -130,56 +135,94 @@ class _FilesScreenState extends State<FilesScreen> {
                             Image.asset("assets/logo.png", fit: BoxFit.contain),
                       ),
                     ),
-                    SizedBox(
-                      height: 400,
-                      child: ListView.builder(
-                          itemCount: filesList.length,
-                          itemBuilder: ((context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-                              child: SizedBox(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Card(
-                                      elevation: 3,
-                                      child: SizedBox(
-                                          height: 40,
-                                          width: 200,
-                                          child: Center(
-                                            child: TextRegular(
-                                                text: filesList[index],
-                                                fontSize: 18,
-                                                color: Colors.black),
-                                          )),
-                                    ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        print(filesList[index]);
+                    StreamBuilder<DocumentSnapshot>(
+                        stream: userData,
+                        builder: (context,
+                            AsyncSnapshot<DocumentSnapshot> snapshot) {
+                          if (!snapshot.hasData) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          } else if (snapshot.hasError) {
+                            return const Center(
+                                child: Text('Something went wrong'));
+                          } else if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          }
 
-                                        uploadPicture(
-                                            'gallery', filesList[index]);
-                                      },
-                                      child: const Card(
-                                        elevation: 3,
-                                        child: SizedBox(
-                                            height: 40,
-                                            width: 50,
-                                            child: Center(
-                                              child: Icon(Icons
-                                                  .add_circle_outline_rounded),
-                                            )),
+                          dynamic data = snapshot.data;
+
+                          print(data);
+                          return SizedBox(
+                            height: 400,
+                            child: ListView.builder(
+                                itemCount: filesList.length,
+                                itemBuilder: ((context, index) {
+                                  return Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                                    child: SizedBox(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Card(
+                                            elevation: 3,
+                                            child: SizedBox(
+                                                height: 40,
+                                                width: 200,
+                                                child: Center(
+                                                  child: TextRegular(
+                                                      text: filesList[index],
+                                                      fontSize: 18,
+                                                      color: Colors.black),
+                                                )),
+                                          ),
+                                          const SizedBox(
+                                            width: 10,
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              print(filesList[index]);
+
+                                              uploadPicture(
+                                                  'gallery', filesList[index]);
+                                            },
+                                            child: const Card(
+                                              elevation: 3,
+                                              child: SizedBox(
+                                                  height: 40,
+                                                  width: 50,
+                                                  child: Center(
+                                                    child: Icon(Icons
+                                                        .add_circle_outline_rounded),
+                                                  )),
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            width: 5,
+                                          ),
+                                          data[filesList[index]] == ''
+                                              ? const SizedBox()
+                                              : Container(
+                                                  decoration: BoxDecoration(
+                                                      color: Colors.black,
+                                                      image: DecorationImage(
+                                                          fit: BoxFit.cover,
+                                                          image: NetworkImage(
+                                                              data[filesList[
+                                                                  index]]))),
+                                                  height: 30,
+                                                  width: 30,
+                                                ),
+                                        ],
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          })),
-                    ),
+                                  );
+                                })),
+                          );
+                        }),
                   ]),
             ),
           ),
