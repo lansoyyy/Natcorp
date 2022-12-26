@@ -201,7 +201,36 @@ class JobDetail extends StatelessWidget {
                 ),
                 //button apply now
                 Container(
-                  margin: const EdgeInsets.symmetric(vertical: 25),
+                  margin: const EdgeInsets.only(
+                    left: 25,
+                    right: 25,
+                  ),
+                  height: 45,
+                  width: double.maxFinite,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        elevation: 0,
+                        primary: Theme.of(context).primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        )),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const ResumeScreen()));
+                    },
+                    child: const Text('Rate'),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  margin: const EdgeInsets.only(
+                    left: 25,
+                    right: 25,
+                  ),
                   height: 45,
                   width: double.maxFinite,
                   child: ElevatedButton(
