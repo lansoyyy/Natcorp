@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:natcorp/Pages/home/models/job.dart';
 import 'package:natcorp/Pages/home/models/resume.dart';
 import 'package:natcorp/utilities/appColors/app_colors.dart';
@@ -210,15 +211,99 @@ class JobDetail extends StatelessWidget {
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                         elevation: 0,
-                        primary: Theme.of(context).primaryColor,
+                        primary: Colors.amber,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         )),
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const ResumeScreen()));
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return Dialog(
+                              child: SizedBox(
+                                width: 80,
+                                height: 100,
+                                child: Column(
+                                  children: [
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    TextBold(
+                                        text: 'How was your experience?',
+                                        fontSize: 18,
+                                        color: Colors.amber),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Center(
+                                      child: RatingBar.builder(
+                                        initialRating: 5,
+                                        minRating: 1,
+                                        direction: Axis.horizontal,
+                                        allowHalfRating: false,
+                                        itemCount: 5,
+                                        itemPadding: const EdgeInsets.symmetric(
+                                            horizontal: 0.0),
+                                        itemBuilder: (context, _) => const Icon(
+                                          Icons.star,
+                                          color: Colors.amber,
+                                        ),
+                                        onRatingUpdate: (rating) async {
+                                          // var collection =
+                                          //     FirebaseFirestore
+                                          //         .instance
+                                          //         .collection(
+                                          //             'Providers')
+                                          //         .where('id',
+                                          //             isEqualTo:
+                                          //                 data[
+                                          //                     'id']);
+
+                                          // var querySnapshot =
+                                          //     await collection
+                                          //         .get();
+
+                                          // for (var queryDocumentSnapshot
+                                          //     in querySnapshot
+                                          //         .docs) {
+                                          //   Map<String, dynamic>
+                                          //       data1 =
+                                          //       queryDocumentSnapshot
+                                          //           .data();
+
+                                          //   FirebaseFirestore
+                                          //       .instance
+                                          //       .collection(
+                                          //           'Providers')
+                                          //       .doc(data['id'])
+                                          //       .update({
+                                          //     'reviews': FieldValue
+                                          //         .arrayUnion([
+                                          //       FirebaseAuth
+                                          //           .instance
+                                          //           .currentUser!
+                                          //           .uid
+                                          //     ]),
+                                          //     'ratings': data1[
+                                          //             'ratings'] +
+                                          //         rating,
+                                          //     'nums':
+                                          //         data1['nums'] +
+                                          //             1,
+                                          //   });
+                                          // }
+
+                                          Navigator.pop(context);
+
+                                          // print(rating);
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          });
                     },
                     child: const Text('Rate'),
                   ),
