@@ -39,6 +39,7 @@ class UserModel {
       'Brgy Clearance': '',
       'Police Clearance': '',
       'Vaccine Card': '',
+      'status': 'Not hired'
     };
   }
 }
