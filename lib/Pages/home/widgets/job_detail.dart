@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:natcorp/Pages/home/models/job.dart';
 import 'package:natcorp/Pages/home/models/resume.dart';
-import 'package:natcorp/Pages/sign%20up/registration_page.dart';
-import 'package:natcorp/widgets/agreement_page.dart';
 import 'package:natcorp/widgets/icon_text.dart';
+import 'package:natcorp/widgets/text_widget.dart';
 
 // this is for job details when you click the work from homepage
 class JobDetail extends StatelessWidget {
   @override
   final Job job;
-  JobDetail(this.job);
+  const JobDetail(this.job);
 
+  @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(25),
-      decoration: BoxDecoration(
+      padding: const EdgeInsets.all(25),
+      decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(50),
@@ -29,7 +29,7 @@ class JobDetail extends StatelessWidget {
               width: 60,
               color: Colors.grey.withOpacity(0.3),
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -41,17 +41,17 @@ class JobDetail extends StatelessWidget {
                         Container(
                           height: 40,
                           width: 40,
-                          padding: EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
                             color: Colors.grey.withOpacity(0.1),
                           ),
                           child: Image.asset(job.logoUrl),
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         Text(
                           job.company,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 16,
                           ),
                         ),
@@ -72,13 +72,14 @@ class JobDetail extends StatelessWidget {
                     )
                   ],
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 //Title
                 Text(
                   job.title,
-                  style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 26, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: 15),
+                const SizedBox(height: 15),
                 //Location and time outlined
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -87,36 +88,36 @@ class JobDetail extends StatelessWidget {
                     IconText(Icons.location_on_outlined, job.time),
                   ],
                 ),
-                SizedBox(height: 30),
-                Text(
+                const SizedBox(height: 30),
+                const Text(
                   'Requirements',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 ...job.req
                     .map(
                       (e) => Container(
-                        margin: EdgeInsets.symmetric(vertical: 5),
+                        margin: const EdgeInsets.symmetric(vertical: 5),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
-                              margin: EdgeInsets.only(top: 10),
+                              margin: const EdgeInsets.only(top: 10),
                               height: 5,
                               width: 5,
-                              decoration: BoxDecoration(
+                              decoration: const BoxDecoration(
                                   shape: BoxShape.circle, color: Colors.black),
                             ),
-                            SizedBox(width: 10),
+                            const SizedBox(width: 10),
                             //details
                             ConstrainedBox(
-                              constraints: BoxConstraints(
+                              constraints: const BoxConstraints(
                                 maxWidth: 300,
                               ),
                               child: Text(
                                 e,
-                                style: TextStyle(
-                                  wordSpacing: 2.5,
+                                style: const TextStyle(
+                                  wordSpacing: 1.5,
                                   height: 1.5,
                                 ),
                               ),
@@ -126,9 +127,41 @@ class JobDetail extends StatelessWidget {
                       ),
                     )
                     .toList(),
+
+                ExpansionTile(
+                  title: TextRegular(
+                    text: 'View Comments',
+                    fontSize: 12,
+                    color: Colors.grey,
+                  ),
+                  children: [
+                    SizedBox(
+                      height: 200,
+                      child: ListView.builder(
+                        itemBuilder: ((context, index) {
+                          return ListTile(
+                            leading: const CircleAvatar(
+                              minRadius: 25,
+                              maxRadius: 25,
+                              backgroundColor: Colors.grey,
+                            ),
+                            title: TextRegular(
+                                text: 'Comment here',
+                                fontSize: 12,
+                                color: Colors.black),
+                            subtitle: TextRegular(
+                                text: 'John Doe',
+                                fontSize: 10,
+                                color: Colors.grey),
+                          );
+                        }),
+                      ),
+                    ),
+                  ],
+                ),
                 //button apply now
                 Container(
-                  margin: EdgeInsets.symmetric(vertical: 25),
+                  margin: const EdgeInsets.symmetric(vertical: 25),
                   height: 45,
                   width: double.maxFinite,
                   child: ElevatedButton(
@@ -144,7 +177,7 @@ class JobDetail extends StatelessWidget {
                           MaterialPageRoute(
                               builder: (context) => const ResumeScreen()));
                     },
-                    child: Text('Apply Now'),
+                    child: const Text('Apply Now'),
                   ),
                 )
               ],
