@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:natcorp/Pages/home/models/job.dart';
 import 'package:natcorp/widgets/icon_text.dart';
 
+import '../../../widgets/text_widget.dart';
+
 class JobItem extends StatelessWidget {
   final Job job;
   final bool showTime;
@@ -106,13 +108,25 @@ class JobItem extends StatelessWidget {
                         const SizedBox(
                           width: 10,
                         ),
-                        Text(
-                          job.company,
-                          style: const TextStyle(
-                              color: Colors.grey,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
-                        )
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              job.company,
+                              style: const TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            TextRegular(
+                                text: '4.5 ★',
+                                fontSize: 12,
+                                color: Colors.amber),
+                          ],
+                        ),
                       ],
                     ),
                     Icon(

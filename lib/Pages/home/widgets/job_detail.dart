@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:natcorp/Pages/home/models/job.dart';
 import 'package:natcorp/Pages/home/models/resume.dart';
+import 'package:natcorp/utilities/appColors/app_colors.dart';
 import 'package:natcorp/widgets/icon_text.dart';
 import 'package:natcorp/widgets/text_widget.dart';
 
@@ -49,11 +50,23 @@ class JobDetail extends StatelessWidget {
                           child: Image.asset(job.logoUrl),
                         ),
                         const SizedBox(width: 10),
-                        Text(
-                          job.company,
-                          style: const TextStyle(
-                            fontSize: 16,
-                          ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              job.company,
+                              style: const TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            TextRegular(
+                                text: '4.5 ★',
+                                fontSize: 12,
+                                color: Colors.amber),
+                          ],
                         ),
                       ],
                     ),
@@ -135,27 +148,54 @@ class JobDetail extends StatelessWidget {
                     color: Colors.grey,
                   ),
                   children: [
-                    SizedBox(
-                      height: 200,
-                      child: ListView.builder(
-                        itemBuilder: ((context, index) {
-                          return ListTile(
-                            leading: const CircleAvatar(
-                              minRadius: 25,
-                              maxRadius: 25,
-                              backgroundColor: Colors.grey,
+                    Column(
+                      children: [
+                        SizedBox(
+                          height: 200,
+                          child: ListView.builder(
+                            itemBuilder: ((context, index) {
+                              return ListTile(
+                                trailing: TextRegular(
+                                    text: '12:30pm',
+                                    fontSize: 10,
+                                    color: Colors.grey),
+                                leading: const CircleAvatar(
+                                  minRadius: 25,
+                                  maxRadius: 25,
+                                  backgroundColor: Colors.grey,
+                                ),
+                                title: TextRegular(
+                                    text: 'Comment here',
+                                    fontSize: 12,
+                                    color: Colors.black),
+                                subtitle: TextRegular(
+                                    text: 'John Doe',
+                                    fontSize: 10,
+                                    color: Colors.grey),
+                              );
+                            }),
+                          ),
+                        ),
+                        Container(
+                            decoration: BoxDecoration(
+                              color: Colors.grey[200],
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(10),
+                                topRight: Radius.circular(10),
+                              ),
                             ),
-                            title: TextRegular(
-                                text: 'Comment here',
-                                fontSize: 12,
-                                color: Colors.black),
-                            subtitle: TextRegular(
-                                text: 'John Doe',
-                                fontSize: 10,
-                                color: Colors.grey),
-                          );
-                        }),
-                      ),
+                            child: TextFormField(
+                              decoration: InputDecoration(
+                                suffixIcon: IconButton(
+                                  onPressed: () {},
+                                  icon: const Icon(
+                                    Icons.send,
+                                    color: AppColors.Kgradient1,
+                                  ),
+                                ),
+                              ),
+                            )),
+                      ],
                     ),
                   ],
                 ),
