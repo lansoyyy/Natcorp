@@ -12,7 +12,19 @@ Future addForm(
     String positionDesired,
     String companyId,
     String companyName,
-    String companyLogo) async {
+    String companyLogo,
+    String nso,
+    String nbi,
+    String diploma,
+    String coe,
+    String sss,
+    String philhealth,
+    String pagibig,
+    String tin,
+    String tor,
+    String brgyclearance,
+    String policeClearance,
+    String vaccineCard) async {
   final docUser = FirebaseFirestore.instance.collection('Applications').doc();
 
   final json = {
@@ -30,6 +42,18 @@ Future addForm(
     'companyName': companyName,
     'id': docUser.id,
     'dateTime': DateTime.now(),
+    'NSO': nso,
+    'NBI': nbi,
+    'Diploma': diploma,
+    'COE': coe,
+    'SSS': sss,
+    'Philhealth': philhealth,
+    'Pag-ibig': pagibig,
+    'TIN': tin,
+    'TOR': tor,
+    'Brgy Clearance': brgyclearance,
+    'Police Clearance': policeClearance,
+    'Vaccine Card': vaccineCard,
   };
 
   await docUser.set(json);

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-Future addRatings(String name, String profilePicture, String userId,
+Future addComment(String name, String profilePicture, String userId,
     String comment, String companyId) async {
   final docUser = FirebaseFirestore.instance.collection('Comments').doc();
 
