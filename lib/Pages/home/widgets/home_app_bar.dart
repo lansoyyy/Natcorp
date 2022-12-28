@@ -1,9 +1,15 @@
 import 'package:badges/badges.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:natcorp/Pages/notif/notif_page.dart';
 import 'package:natcorp/widgets/text_widget.dart';
 
 class HomeAppBar extends StatelessWidget {
+  final Stream<DocumentSnapshot> userData = FirebaseFirestore.instance
+      .collection('users')
+      .doc(FirebaseAuth.instance.currentUser!.uid)
+      .snapshots();
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -19,7 +25,7 @@ class HomeAppBar extends StatelessWidget {
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 Text(
                   'Welcome home',
                   style: TextStyle(
@@ -28,10 +34,26 @@ class HomeAppBar extends StatelessWidget {
                 SizedBox(
                   height: 10,
                 ),
-                Text(
-                  'Princess Villegas',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
-                )
+                StreamBuilder<DocumentSnapshot>(
+                    stream: userData,
+                    builder:
+                        (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                      if (!snapshot.hasData) {
+                        return const Center(child: Text('Loading'));
+                      } else if (snapshot.hasError) {
+                        return const Center(
+                            child: Text('Something went wrong'));
+                      } else if (snapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                      dynamic data = snapshot.data;
+                      return Text(
+                        data['firstName'] + ' ' + data['secondName'],
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 28),
+                      );
+                    })
               ],
             ),
 
