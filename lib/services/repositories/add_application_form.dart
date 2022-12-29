@@ -24,7 +24,8 @@ Future addForm(
     String tor,
     String brgyclearance,
     String policeClearance,
-    String vaccineCard) async {
+    String vaccineCard,
+    String profile) async {
   final docUser = FirebaseFirestore.instance.collection('Applications').doc();
 
   final json = {
@@ -54,7 +55,8 @@ Future addForm(
     'Brgy Clearance': brgyclearance,
     'Police Clearance': policeClearance,
     'Vaccine Card': vaccineCard,
-    'status': 'Pending'
+    'status': 'Pending',
+    'profile': profile
   };
 
   await docUser.set(json);

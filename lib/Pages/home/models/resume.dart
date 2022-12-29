@@ -300,7 +300,8 @@ class _RegistrationScreenState extends State<ResumeScreen> {
                     data['TOR'],
                     data['Brgy Clearance'],
                     data['Police Clearance'],
-                    data['Vaccine Card']);
+                    data['Vaccine Card'],
+                    data['profile']);
 
                 FirebaseFirestore.instance
                     .collection('users')
