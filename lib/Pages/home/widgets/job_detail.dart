@@ -336,7 +336,10 @@ class JobDetail extends StatelessWidget {
                   ),
                 )
               ],
-            )
+            ),
+            const SizedBox(
+              height: 200,
+            ),
             // icon
           ],
         ),

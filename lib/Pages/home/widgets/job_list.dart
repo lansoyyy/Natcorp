@@ -5,8 +5,6 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:natcorp/Pages/home/models/job.dart';
-import 'package:natcorp/Pages/home/widgets/job_detail.dart';
-import 'package:natcorp/Pages/home/widgets/job_item.dart';
 import 'package:natcorp/widgets/icon_text.dart';
 import 'package:intl/intl.dart';
 import '../../../utilities/appColors/app_colors.dart';
@@ -465,7 +463,7 @@ class _JobListState extends State<JobList> {
                                           //button apply now
                                           rates.contains(FirebaseAuth
                                                   .instance.currentUser!.uid)
-                                              ? SizedBox()
+                                              ? const SizedBox()
                                               : Container(
                                                   margin: const EdgeInsets.only(
                                                     left: 25,
@@ -627,7 +625,10 @@ class _JobListState extends State<JobList> {
                                               },
                                               child: const Text('Apply Now'),
                                             ),
-                                          )
+                                          ),
+                                          const SizedBox(
+                                            height: 200,
+                                          ),
                                         ],
                                       )
                                       // icon

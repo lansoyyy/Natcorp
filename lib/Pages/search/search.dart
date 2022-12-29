@@ -655,7 +655,7 @@ class _SearchPageState extends State<SearchPage> {
                                                             .instance
                                                             .currentUser!
                                                             .uid)
-                                                        ? SizedBox()
+                                                        ? const SizedBox()
                                                         : Container(
                                                             margin:
                                                                 const EdgeInsets
@@ -812,7 +812,10 @@ class _SearchPageState extends State<SearchPage> {
                                                       ),
                                                     )
                                                   ],
-                                                )
+                                                ),
+                                                const SizedBox(
+                                                  height: 200,
+                                                ),
                                                 // icon
                                               ],
                                             ),

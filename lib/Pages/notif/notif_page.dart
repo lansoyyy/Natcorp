@@ -479,7 +479,7 @@ class _NotifPageState extends State<NotifPage> {
                                             //button apply now
                                             rates.contains(FirebaseAuth
                                                     .instance.currentUser!.uid)
-                                                ? SizedBox()
+                                                ? const SizedBox()
                                                 : Container(
                                                     margin:
                                                         const EdgeInsets.only(
@@ -636,7 +636,10 @@ class _NotifPageState extends State<NotifPage> {
                                               ),
                                             )
                                           ],
-                                        )
+                                        ),
+                                        const SizedBox(
+                                          height: 200,
+                                        ),
                                         // icon
                                       ],
                                     ),
