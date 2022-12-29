@@ -63,6 +63,8 @@ class _SearchPageState extends State<SearchPage> {
 
   final commentController = TextEditingController();
 
+  late String jobType = 'All';
+
   @override
   Widget build(BuildContext context) {
     print('called');
@@ -127,56 +129,94 @@ class _SearchPageState extends State<SearchPage> {
                   ],
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 25),
-                height: 40,
-                child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) => GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              selected = index;
-                            });
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 20),
-                            decoration: BoxDecoration(
-                                color: selected == index
-                                    ? Theme.of(context)
-                                        .primaryColor
-                                        .withOpacity(0.2)
-                                    : Colors.white,
-                                borderRadius: BorderRadius.circular(20),
-                                border: Border.all(
-                                  color: selected == index
-                                      ? Theme.of(context).primaryColor
-                                      : Theme.of(context)
-                                          .primaryColor
-                                          .withOpacity(0.2),
-                                )),
-                            child: Text(tagsList[index]),
-                          ),
-                        ),
-                    separatorBuilder: (_, index) => const SizedBox(
-                          width: 15,
-                        ),
-                    itemCount: tagsList.length),
-              ), // search and yellow filter
+              StreamBuilder<QuerySnapshot>(
+                  stream:
+                      FirebaseFirestore.instance.collection('Job').snapshots(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (snapshot.hasError) {
+                      print('error');
+                      return const Center(child: Text('Error'));
+                    }
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      print('waiting');
+                      return const Padding(
+                        padding: EdgeInsets.only(top: 50),
+                        child: Center(
+                            child: CircularProgressIndicator(
+                          color: Colors.black,
+                        )),
+                      );
+                    }
+
+                    final data = snapshot.requireData;
+                    return SizedBox(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 25),
+                        height: 40,
+                        child: ListView.separated(
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    selected = index;
+                                    jobType = data.docs[index]['name'];
+                                  });
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 20),
+                                  decoration: BoxDecoration(
+                                      color: selected == index
+                                          ? Theme.of(context)
+                                              .primaryColor
+                                              .withOpacity(0.2)
+                                          : Colors.white,
+                                      borderRadius: BorderRadius.circular(20),
+                                      border: Border.all(
+                                        color: selected == index
+                                            ? Theme.of(context).primaryColor
+                                            : Theme.of(context)
+                                                .primaryColor
+                                                .withOpacity(0.2),
+                                      )),
+                                  child: Text(data.docs[index]['name']),
+                                ),
+                              );
+                            },
+                            separatorBuilder: (_, index) => const SizedBox(
+                                  width: 15,
+                                ),
+                            itemCount: data.size),
+                      ),
+                    );
+                  }), // search and yellow filter
               Expanded(
                 child: Container(
                   margin: const EdgeInsets.symmetric(vertical: 15),
                   height: 550,
                   child: StreamBuilder<QuerySnapshot>(
-                      stream: FirebaseFirestore.instance
-                          .collection('Company')
-                          .where('companyName',
-                              isGreaterThanOrEqualTo:
-                                  toBeginningOfSentenceCase(query))
-                          .where('companyName',
-                              isLessThan:
-                                  '${toBeginningOfSentenceCase(query)}z')
-                          .snapshots(),
+                      stream: jobType == 'All'
+                          ? FirebaseFirestore.instance
+                              .collection('Company')
+                              .where('companyName',
+                                  isGreaterThanOrEqualTo:
+                                      toBeginningOfSentenceCase(query))
+                              .where('companyName',
+                                  isLessThan:
+                                      '${toBeginningOfSentenceCase(query)}z')
+                              .snapshots()
+                          : FirebaseFirestore.instance
+                              .collection('Company')
+                              .where('companyName',
+                                  isGreaterThanOrEqualTo:
+                                      toBeginningOfSentenceCase(query))
+                              .where('companyName',
+                                  isLessThan:
+                                      '${toBeginningOfSentenceCase(query)}z')
+                              .where('position', isEqualTo: jobType)
+                              .snapshots(),
                       builder: (BuildContext context,
                           AsyncSnapshot<QuerySnapshot> snapshot) {
                         if (snapshot.hasError) {

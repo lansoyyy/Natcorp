@@ -64,10 +64,12 @@ class _JobListState extends State<JobList> {
         margin: const EdgeInsets.symmetric(vertical: 15),
         height: 550,
         child: StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance
-                .collection('Company')
-                .where('position', isEqualTo: widget.jobType)
-                .snapshots(),
+            stream: widget.jobType == 'All'
+                ? FirebaseFirestore.instance.collection('Company').snapshots()
+                : FirebaseFirestore.instance
+                    .collection('Company')
+                    .where('position', isEqualTo: widget.jobType)
+                    .snapshots(),
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.hasError) {

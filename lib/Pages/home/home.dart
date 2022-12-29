@@ -22,7 +22,7 @@ class _HomePageState extends State<HomePage> {
 
   var selected = 0;
 
-  late String jobType = '';
+  late String jobType = 'All';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
