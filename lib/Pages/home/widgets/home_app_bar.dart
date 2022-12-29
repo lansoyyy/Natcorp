@@ -49,7 +49,7 @@ class HomeAppBar extends StatelessWidget {
                       }
                       dynamic data = snapshot.data;
                       return Text(
-                        data['firstName'] + ' ' + data['secondName'],
+                        data['firstName'],
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 28),
                       );

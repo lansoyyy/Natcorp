@@ -117,6 +117,9 @@ class _FilesScreenState extends State<FilesScreen> {
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
     return Scaffold(
+        appBar: AppBar(
+          title: TextBold(text: 'My Files', fontSize: 24, color: Colors.white),
+        ),
         backgroundColor: Colors.white,
         body: Container(
           color: Colors.white,
@@ -125,7 +128,7 @@ class _FilesScreenState extends State<FilesScreen> {
             child: Form(
               key: formKey,
               child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Center(
