@@ -543,9 +543,87 @@ class _JobListState extends State<JobList> {
                               );
                             });
                       },
-                      child: JobItem(
-                        jobList[index],
-                        inNotif: widget.inNotif!,
+                      child: Container(
+                        width: 270,
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          color: Colors.white,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                      height: 40,
+                                      width: 40,
+                                      padding: const EdgeInsets.all(8),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.grey.withOpacity(0.1),
+                                      ),
+                                      child: Image.network(
+                                          data.docs[index]['companyLogo']),
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          data.docs[index]['companyName'],
+                                          style: const TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        TextRegular(
+                                            text:
+                                                '${data.docs[index]['ratings'] / data.docs[index]['reviews']} ★',
+                                            fontSize: 12,
+                                            color: Colors.amber),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                // Icon(
+                                //   job.isMark
+                                //       ? Icons.bookmark
+                                //       : Icons.bookmark_outline_outlined,
+                                //   color: job.isMark
+                                //       ? Theme.of(context).primaryColor
+                                //       : Colors.black,
+                                // )
+                              ],
+                            ),
+                            const SizedBox(height: 15),
+                            Text(
+                              data.docs[index]['position'],
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 15),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                IconText(Icons.location_on_outlined,
+                                    data.docs[index]['companyAddress']),
+                                // if (showTime)
+                                IconText(
+                                    Icons.access_time_outlined, 'Full Time'),
+                              ],
+                            ),
+                          ],
+                        ),
                       ));
                 },
                 separatorBuilder: (_, index) => const SizedBox(
