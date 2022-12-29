@@ -50,6 +50,7 @@ dependencies:
   firebase_core_platform_interface: 4.5.1
   persistent_bottom_nav_bar:
   flutter_slidable:
+  agora_uikit:
 
 dev_dependencies:
   flutter_test:
