@@ -61,8 +61,34 @@ class HomeAppBar extends StatelessWidget {
             Row(
               children: [
                 Badge(
-                  badgeContent:
-                      TextRegular(text: '1', fontSize: 12, color: Colors.white),
+                  badgeContent: StreamBuilder<QuerySnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection('Company')
+                          .snapshots(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (snapshot.hasError) {
+                          print('error');
+                          return const Center(child: Text('Error'));
+                        }
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          print('waiting');
+                          return const Padding(
+                            padding: EdgeInsets.only(top: 50),
+                            child: Center(
+                                child: CircularProgressIndicator(
+                              color: Colors.black,
+                            )),
+                          );
+                        }
+
+                        final data = snapshot.requireData;
+                        return TextRegular(
+                            text: snapshot.data!.size.toString(),
+                            fontSize: 12,
+                            color: Colors.white);
+                      }),
                   child: IconButton(
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
