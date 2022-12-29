@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:natcorp/Pages/favorites/models/favorite_list_models.dart';
 import 'package:natcorp/Pages/favorites/models/favorite_page_models.dart';
 import 'package:provider/provider.dart';
@@ -6,33 +9,132 @@ import 'package:provider/provider.dart';
 class FavoriteList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    var textTheme = Theme.of(context).textTheme.headline6;
+
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            title:
-                Text('Favorite', style: Theme.of(context).textTheme.headline1),
-            floating: true,
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.bookmark_border_outlined),
-                // code of navigation to favorite page //
-                onPressed: () => Navigator.pushNamed(context, '/favoritepage'),
-              ),
-            ],
-          ),
-          const SliverToBoxAdapter(child: SizedBox(height: 12)),
-          SliverList(
-            delegate:
-                SliverChildBuilderDelegate((BuildContext context, int index) {
-              // to call MyListItem widget //
-              return _MyListItem(index);
-            },
-                    // to specify count the list show //
-                    childCount: 15),
-          ),
+      appBar: AppBar(
+        title: Text('Favorites', style: Theme.of(context).textTheme.headline1),
+        actions: [
+          // IconButton(
+          //   icon: const Icon(Icons.bookmark_border_outlined),
+          //   // code of navigation to favorite page //
+          //   onPressed: () => Navigator.pushNamed(context, '/favoritepage'),
+          // ),
         ],
       ),
+      body: StreamBuilder<QuerySnapshot>(
+          stream: FirebaseFirestore.instance
+              .collection('Company')
+              .where('fav',
+                  arrayContains: FirebaseAuth.instance.currentUser!.uid)
+              .snapshots(),
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.hasError) {
+              print('error');
+              return const Center(child: Text('Error'));
+            }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              print('waiting');
+              return const Padding(
+                padding: EdgeInsets.only(top: 50),
+                child: Center(
+                    child: CircularProgressIndicator(
+                  color: Colors.black,
+                )),
+              );
+            }
+
+            final data = snapshot.requireData;
+            return ListView.builder(
+              itemCount: snapshot.data?.size ?? 0,
+              itemBuilder: (BuildContext context, int index) {
+                List fav = data.docs[index]['fav'];
+                // to call MyListItem widget //
+                return Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: LimitedBox(
+                    maxHeight: 60,
+                    child: Row(
+                      children: [
+                        AspectRatio(
+                          aspectRatio: 1,
+                          child: Image.network(data.docs[index]['companyLogo']),
+                        ),
+                        const SizedBox(width: 24),
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(data.docs[index]['companyName'],
+                                  style: textTheme),
+                              Text(data.docs[index]['position'],
+                                  style: TextStyle(
+                                      fontSize: 16, color: Colors.grey)),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 24),
+                        fav.contains(FirebaseAuth.instance.currentUser!.uid) ==
+                                false
+                            ? GestureDetector(
+                                onTap: (() {
+                                  FirebaseFirestore.instance
+                                      .collection('Company')
+                                      .doc(data.docs[index].id)
+                                      .update({
+                                    'fav': FieldValue.arrayUnion([
+                                      FirebaseAuth.instance.currentUser!.uid,
+                                    ]),
+                                  });
+                                  Fluttertoast.showToast(
+                                      msg: 'Added to Favorites');
+                                }),
+                                child: Icon(
+                                  fav.contains(FirebaseAuth
+                                          .instance.currentUser!.uid)
+                                      ? Icons.bookmark
+                                      : Icons.bookmark_outline_outlined,
+                                  color: fav.contains(FirebaseAuth
+                                          .instance.currentUser!.uid)
+                                      ? Theme.of(context).primaryColor
+                                      : Colors.black,
+                                ),
+                              )
+                            : GestureDetector(
+                                onTap: (() {
+                                  FirebaseFirestore.instance
+                                      .collection('Company')
+                                      .doc(data.docs[index].id)
+                                      .update({
+                                    'fav': FieldValue.arrayRemove([
+                                      FirebaseAuth.instance.currentUser!.uid,
+                                    ]),
+                                  });
+                                  Fluttertoast.showToast(
+                                      msg: 'Removed to Favorites');
+                                }),
+                                child: Icon(
+                                  fav.contains(FirebaseAuth
+                                          .instance.currentUser!.uid)
+                                      ? Icons.bookmark
+                                      : Icons.bookmark_outline_outlined,
+                                  color: fav.contains(FirebaseAuth
+                                          .instance.currentUser!.uid)
+                                      ? Theme.of(context).primaryColor
+                                      : Colors.black,
+                                ),
+                              )
+                      ],
+                    ),
+                  ),
+                );
+              },
+              // to specify count the list show //
+            );
+          }),
     );
   }
 }

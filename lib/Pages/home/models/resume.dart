@@ -2,8 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:natcorp/Pages/mainButtom/bottom_page.dart';
 import 'package:natcorp/Pages/sign%20up/model/user_model.dart';
+import 'package:natcorp/services/repositories/add_application_form.dart';
 import 'package:natcorp/widgets/text_widget.dart';
 
 class ResumeScreen extends StatefulWidget {
@@ -31,6 +33,8 @@ class _RegistrationScreenState extends State<ResumeScreen> {
 
   late String gender = 'Male';
   final List<bool> _isSelected = [true, false];
+
+  final box = GetStorage();
 
   @override
   Widget build(BuildContext context) {
@@ -219,7 +223,6 @@ class _RegistrationScreenState extends State<ResumeScreen> {
       autofocus: false,
       controller: age,
       keyboardType: TextInputType.number,
-      obscureText: true,
       validator: (value) {
         RegExp regExp = RegExp(r'^.{2,}$');
         if (value!.isEmpty) {
@@ -245,23 +248,80 @@ class _RegistrationScreenState extends State<ResumeScreen> {
 
     //sign up button
 
+    final Stream<DocumentSnapshot> userData = FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .snapshots();
+
     final signUpButton = Material(
       elevation: 5,
       borderRadius: BorderRadius.circular(30),
       color: Colors.black,
-      child: MaterialButton(
-        padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-        minWidth: MediaQuery.of(context).size.width,
-        onPressed: () {
-          // signUp(email.text, password.text);
-        },
-        child: const Text(
-          "SignUp",
-          textAlign: TextAlign.center,
-          style: TextStyle(
-              fontSize: 18, color: Colors.white, fontWeight: FontWeight.normal),
-        ),
-      ),
+      child: StreamBuilder<DocumentSnapshot>(
+          stream: userData,
+          builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+            if (!snapshot.hasData) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return const Center(child: Text('Something went wrong'));
+            } else if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            dynamic data = snapshot.data;
+            return MaterialButton(
+              padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+              minWidth: MediaQuery.of(context).size.width,
+              onPressed: () {
+                print(box.read('compId'));
+                // signUp(email.text, password.text);
+
+                addForm(
+                    firstName.text,
+                    secondName.text,
+                    lastName.text,
+                    email.text,
+                    age.text,
+                    address.text,
+                    num.text,
+                    gender,
+                    pos.text,
+                    box.read('compId'),
+                    box.read('compName'),
+                    box.read('compLogo'),
+                    data['NSO'],
+                    data['NBI'],
+                    data['Diploma'],
+                    data['COE'],
+                    data['SSS'],
+                    data['Philhealth'],
+                    data['Pag-ibig'],
+                    data['TIN'],
+                    data['TOR'],
+                    data['Brgy Clearance'],
+                    data['Police Clearance'],
+                    data['Vaccine Card'],
+                    data['profile']);
+
+                FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(FirebaseAuth.instance.currentUser!.uid)
+                    .update({'status': 'Pending'});
+
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => const bottomButton()));
+                Fluttertoast.showToast(msg: 'Application Added Succesfully!');
+              },
+              child: const Text(
+                "Continue",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.white,
+                    fontWeight: FontWeight.normal),
+              ),
+            );
+          }),
     );
 
     return Scaffold(
