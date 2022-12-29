@@ -92,6 +92,9 @@ class _JobListState extends State<JobList> {
                   List fav = data.docs[index]['fav'];
 
                   List rates = data.docs[index]['rates'];
+
+                  double num =
+                      data.docs[index]['ratings'] / data.docs[index]['reviews'];
                   return GestureDetector(
                       onTap: () {
                         showModalBottomSheet(
@@ -161,7 +164,7 @@ class _JobListState extends State<JobList> {
                                                       ),
                                                       TextRegular(
                                                           text:
-                                                              '${data.docs[index]['ratings'] / data.docs[index]['reviews']} ★',
+                                                              '${num.toStringAsFixed(2)} ★',
                                                           fontSize: 12,
                                                           color: Colors.amber),
                                                     ],
@@ -649,8 +652,7 @@ class _JobListState extends State<JobList> {
                                           height: 5,
                                         ),
                                         TextRegular(
-                                            text:
-                                                '${data.docs[index]['ratings'] / data.docs[index]['reviews']} ★',
+                                            text: '${num.toStringAsFixed(2)} ★',
                                             fontSize: 12,
                                             color: Colors.amber),
                                       ],
