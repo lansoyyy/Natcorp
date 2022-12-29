@@ -54,6 +54,7 @@ Future addForm(
     'Brgy Clearance': brgyclearance,
     'Police Clearance': policeClearance,
     'Vaccine Card': vaccineCard,
+    'status': 'Pending'
   };
 
   await docUser.set(json);

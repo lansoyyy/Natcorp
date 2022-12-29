@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:natcorp/Pages/home/models/job.dart';
 import 'package:natcorp/Pages/home/widgets/job_detail.dart';
 import 'package:natcorp/Pages/home/widgets/job_item.dart';
@@ -30,8 +31,11 @@ class _JobListState extends State<JobList> {
     getData();
   }
 
+  final box = GetStorage();
+
   late String name = '';
   late String profilePicture = '';
+  late String myStatus = '';
 
   getData() async {
     // Use provider
@@ -47,6 +51,7 @@ class _JobListState extends State<JobList> {
           name = data['firstName'] + ' ' + data['secondName'];
 
           profilePicture = data['profile'];
+          myStatus = data['status'];
         }
       });
     }
@@ -595,11 +600,30 @@ class _JobListState extends State<JobList> {
                                                             20),
                                                   )),
                                               onPressed: () {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            const ResumeScreen()));
+                                                if (myStatus == 'Pending') {
+                                                  Fluttertoast.showToast(
+                                                      msg:
+                                                          'You can only submit one application at a time');
+                                                } else {
+                                                  box.write(
+                                                      'compName',
+                                                      data.docs[index]
+                                                          ['companyName']);
+
+                                                  box.write('compId',
+                                                      data.docs[index].id);
+
+                                                  box.write(
+                                                      'compLogo',
+                                                      data.docs[index]
+                                                          ['companyLogo']);
+
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              const ResumeScreen()));
+                                                }
                                               },
                                               child: const Text('Apply Now'),
                                             ),

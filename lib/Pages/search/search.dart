@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:natcorp/Pages/home/models/job.dart';
 import 'package:natcorp/Pages/home/widgets/job_list.dart';
 import 'package:natcorp/Pages/search/widgets/search_app_bar.dart';
@@ -39,6 +40,7 @@ class _SearchPageState extends State<SearchPage> {
 
   late String name = '';
   late String profilePicture = '';
+  late String myStatus = '';
 
   getData() async {
     // Use provider
@@ -54,6 +56,7 @@ class _SearchPageState extends State<SearchPage> {
           name = data['firstName'] + ' ' + data['secondName'];
 
           profilePicture = data['profile'];
+          myStatus = data['status'];
         }
       });
     }
@@ -64,6 +67,8 @@ class _SearchPageState extends State<SearchPage> {
   final commentController = TextEditingController();
 
   late String jobType = 'All';
+
+  final box = GetStorage();
 
   @override
   Widget build(BuildContext context) {
@@ -771,12 +776,36 @@ class _SearchPageState extends State<SearchPage> {
                                                                               20),
                                                                 )),
                                                         onPressed: () {
-                                                          Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          const ResumeScreen()));
+                                                          if (myStatus ==
+                                                              'Pending') {
+                                                            Fluttertoast.showToast(
+                                                                msg:
+                                                                    'You can only submit one application at a time');
+                                                          } else {
+                                                            box.write(
+                                                                'compName',
+                                                                data.docs[index]
+                                                                    [
+                                                                    'companyName']);
+
+                                                            box.write(
+                                                                'compId',
+                                                                data.docs[index]
+                                                                    .id);
+
+                                                            box.write(
+                                                                'compLogo',
+                                                                data.docs[index]
+                                                                    [
+                                                                    'companyLogo']);
+
+                                                            Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) =>
+                                                                            const ResumeScreen()));
+                                                          }
                                                         },
                                                         child: const Text(
                                                             'Apply Now'),
