@@ -10,11 +10,8 @@ class NotifPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        backgroundColor: Colors.grey[100],
-        foregroundColor: Colors.black,
-        title: TextRegular(
-            text: 'Notifications', fontSize: 18, color: Colors.black),
-        centerTitle: true,
+        title:
+            TextBold(text: 'Notifications', fontSize: 24, color: Colors.white),
       ),
       body: JobList(jobType: '', inNotif: true),
     );
