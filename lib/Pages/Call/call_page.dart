@@ -73,7 +73,12 @@ class CallScreen extends StatelessWidget {
                             ),
                           ),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              FirebaseFirestore.instance
+                                  .collection('Interviews')
+                                  .doc(data.docs[index].id)
+                                  .update({'type': 'History'});
+                            },
                             icon: const Icon(
                               Icons.done_outline_rounded,
                               size: 28,
@@ -93,10 +98,12 @@ class CallScreen extends StatelessWidget {
                         fontSize: 10,
                         color: Colors.grey),
                     tileColor: Colors.white,
-                    leading: const CircleAvatar(
+                    leading: CircleAvatar(
+                      backgroundImage:
+                          NetworkImage(data.docs[index]['companyLogo']),
                       minRadius: 25,
                       maxRadius: 25,
-                      backgroundColor: Colors.grey,
+                      backgroundColor: Colors.transparent,
                     ),
                   ),
                 );
