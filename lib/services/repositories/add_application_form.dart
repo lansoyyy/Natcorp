@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 Future addForm(
     String firstName,
@@ -58,7 +59,6 @@ Future addForm(
     'uid': FirebaseAuth.instance.currentUser!.uid,
     'status': 'Pending',
     'profile': profile
-
   };
 
   await docUser.set(json);
