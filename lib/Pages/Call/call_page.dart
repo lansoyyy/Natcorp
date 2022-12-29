@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:natcorp/widgets/text_widget.dart';
+import 'package:intl/intl.dart';
 
 class CallScreen extends StatelessWidget {
   const CallScreen({Key? key}) : super(key: key);
@@ -22,50 +25,84 @@ class CallScreen extends StatelessWidget {
           },
         ),
       ),
-      body: ListView.builder(
-        itemBuilder: ((context, index) {
-          return Padding(
-            padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-            child: ListTile(
-              trailing: SizedBox(
-                width: 100,
-                child: Row(
-                  children: [
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.video_call_outlined,
-                        size: 32,
-                        color: Colors.blue,
+      body: StreamBuilder<QuerySnapshot>(
+          stream: FirebaseFirestore.instance
+              .collection('Interviews')
+              .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+              .where('type', isEqualTo: 'Ongoing')
+              .orderBy('dateTime')
+              .snapshots(),
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.hasError) {
+              print('error');
+              return const Center(child: Text('Error'));
+            }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              print('waiting');
+              return const Padding(
+                padding: EdgeInsets.only(top: 50),
+                child: Center(
+                    child: CircularProgressIndicator(
+                  color: Colors.black,
+                )),
+              );
+            }
+
+            final data = snapshot.requireData;
+            return ListView.builder(
+              itemCount: snapshot.data?.size ?? 0,
+              itemBuilder: ((context, index) {
+                DateTime created = data.docs[index]['dateTime'].toDate();
+
+                String formattedTime =
+                    DateFormat.yMMMd().add_jm().format(created);
+                return Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+                  child: ListTile(
+                    trailing: SizedBox(
+                      width: 100,
+                      child: Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {},
+                            icon: const Icon(
+                              Icons.video_call_outlined,
+                              size: 32,
+                              color: Colors.blue,
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {},
+                            icon: const Icon(
+                              Icons.done_outline_rounded,
+                              size: 28,
+                              color: Colors.green,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.done_outline_rounded,
-                        size: 28,
-                        color: Colors.green,
-                      ),
+                    title: TextRegular(
+                        text: data.docs[index]['position'],
+                        fontSize: 14,
+                        color: Colors.black),
+                    subtitle: TextRegular(
+                        text:
+                            '${data.docs[index]['companyName']} - ${formattedTime}',
+                        fontSize: 10,
+                        color: Colors.grey),
+                    tileColor: Colors.white,
+                    leading: const CircleAvatar(
+                      minRadius: 25,
+                      maxRadius: 25,
+                      backgroundColor: Colors.grey,
                     ),
-                  ],
-                ),
-              ),
-              title: TextRegular(
-                  text: 'Position', fontSize: 14, color: Colors.black),
-              subtitle: TextRegular(
-                  text: 'Company name - 11/21/2021 - 4:30pm',
-                  fontSize: 10,
-                  color: Colors.grey),
-              tileColor: Colors.white,
-              leading: const CircleAvatar(
-                minRadius: 25,
-                maxRadius: 25,
-                backgroundColor: Colors.grey,
-              ),
-            ),
-          );
-        }),
-      ),
+                  ),
+                );
+              }),
+            );
+          }),
     );
   }
 }

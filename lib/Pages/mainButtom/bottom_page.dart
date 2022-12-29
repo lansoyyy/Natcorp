@@ -40,6 +40,7 @@ class _bottomButtonState extends State<bottomButton> {
             stream: FirebaseFirestore.instance
                 .collection('Interviews')
                 .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+                .where('type', isEqualTo: 'Ongoing')
                 .snapshots(),
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
