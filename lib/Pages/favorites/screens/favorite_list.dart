@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:natcorp/Pages/favorites/models/favorite_list_models.dart';
 import 'package:natcorp/Pages/favorites/models/favorite_page_models.dart';
 import 'package:provider/provider.dart';
@@ -88,6 +89,8 @@ class FavoriteList extends StatelessWidget {
                                       FirebaseAuth.instance.currentUser!.uid,
                                     ]),
                                   });
+                                  Fluttertoast.showToast(
+                                      msg: 'Added to Favorites');
                                 }),
                                 child: Icon(
                                   fav.contains(FirebaseAuth
@@ -110,6 +113,8 @@ class FavoriteList extends StatelessWidget {
                                       FirebaseAuth.instance.currentUser!.uid,
                                     ]),
                                   });
+                                  Fluttertoast.showToast(
+                                      msg: 'Removed to Favorites');
                                 }),
                                 child: Icon(
                                   fav.contains(FirebaseAuth
