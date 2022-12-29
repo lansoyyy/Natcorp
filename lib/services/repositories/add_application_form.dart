@@ -54,6 +54,7 @@ Future addForm(
     'Brgy Clearance': brgyclearance,
     'Police Clearance': policeClearance,
     'Vaccine Card': vaccineCard,
+    'uid': FirebaseAuth.instance.currentUser!.uid,
   };
 
   await docUser.set(json);
