@@ -87,6 +87,8 @@ class _JobListState extends State<JobList> {
                 scrollDirection: Axis.vertical,
                 itemBuilder: (context, index) {
                   List comments = data.docs[index]['comments'];
+
+                  List fav = data.docs[index]['fav'];
                   return GestureDetector(
                       onTap: () {
                         showModalBottomSheet(
@@ -163,19 +165,85 @@ class _JobListState extends State<JobList> {
                                                   ),
                                                 ],
                                               ),
-                                              //save button isMark
-                                              // Row(
-                                              //   children: [
-                                              //     Icon(
-                                              //       job.isMark
-                                              //           ? Icons.bookmark
-                                              //           : Icons.bookmark_outline_rounded,
-                                              //       color: job.isMark
-                                              //           ? Theme.of(context).primaryColor
-                                              //           : Colors.black,
-                                              //     )
-                                              //   ],
-                                              // )
+                                              fav.contains(FirebaseAuth.instance
+                                                          .currentUser!.uid) ==
+                                                      false
+                                                  ? GestureDetector(
+                                                      onTap: (() {
+                                                        FirebaseFirestore
+                                                            .instance
+                                                            .collection(
+                                                                'Company')
+                                                            .doc(data
+                                                                .docs[index].id)
+                                                            .update({
+                                                          'fav': FieldValue
+                                                              .arrayUnion([
+                                                            FirebaseAuth
+                                                                .instance
+                                                                .currentUser!
+                                                                .uid,
+                                                          ]),
+                                                        });
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      }),
+                                                      child: Icon(
+                                                        fav.contains(FirebaseAuth
+                                                                .instance
+                                                                .currentUser!
+                                                                .uid)
+                                                            ? Icons.bookmark
+                                                            : Icons
+                                                                .bookmark_outline_outlined,
+                                                        color: fav.contains(
+                                                                FirebaseAuth
+                                                                    .instance
+                                                                    .currentUser!
+                                                                    .uid)
+                                                            ? Theme.of(context)
+                                                                .primaryColor
+                                                            : Colors.black,
+                                                      ),
+                                                    )
+                                                  : GestureDetector(
+                                                      onTap: (() {
+                                                        FirebaseFirestore
+                                                            .instance
+                                                            .collection(
+                                                                'Company')
+                                                            .doc(data
+                                                                .docs[index].id)
+                                                            .update({
+                                                          'fav': FieldValue
+                                                              .arrayRemove([
+                                                            FirebaseAuth
+                                                                .instance
+                                                                .currentUser!
+                                                                .uid,
+                                                          ]),
+                                                        });
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      }),
+                                                      child: Icon(
+                                                        fav.contains(FirebaseAuth
+                                                                .instance
+                                                                .currentUser!
+                                                                .uid)
+                                                            ? Icons.bookmark
+                                                            : Icons
+                                                                .bookmark_outline_outlined,
+                                                        color: fav.contains(
+                                                                FirebaseAuth
+                                                                    .instance
+                                                                    .currentUser!
+                                                                    .uid)
+                                                            ? Theme.of(context)
+                                                                .primaryColor
+                                                            : Colors.black,
+                                                      ),
+                                                    )
                                             ],
                                           ),
                                           const SizedBox(height: 20),
@@ -595,14 +663,55 @@ class _JobListState extends State<JobList> {
                                     ),
                                   ],
                                 ),
-                                // Icon(
-                                //   job.isMark
-                                //       ? Icons.bookmark
-                                //       : Icons.bookmark_outline_outlined,
-                                //   color: job.isMark
-                                //       ? Theme.of(context).primaryColor
-                                //       : Colors.black,
-                                // )
+                                fav.contains(FirebaseAuth
+                                            .instance.currentUser!.uid) ==
+                                        false
+                                    ? GestureDetector(
+                                        onTap: (() {
+                                          FirebaseFirestore.instance
+                                              .collection('Company')
+                                              .doc(data.docs[index].id)
+                                              .update({
+                                            'fav': FieldValue.arrayUnion([
+                                              FirebaseAuth
+                                                  .instance.currentUser!.uid,
+                                            ]),
+                                          });
+                                        }),
+                                        child: Icon(
+                                          fav.contains(FirebaseAuth
+                                                  .instance.currentUser!.uid)
+                                              ? Icons.bookmark
+                                              : Icons.bookmark_outline_outlined,
+                                          color: fav.contains(FirebaseAuth
+                                                  .instance.currentUser!.uid)
+                                              ? Theme.of(context).primaryColor
+                                              : Colors.black,
+                                        ),
+                                      )
+                                    : GestureDetector(
+                                        onTap: (() {
+                                          FirebaseFirestore.instance
+                                              .collection('Company')
+                                              .doc(data.docs[index].id)
+                                              .update({
+                                            'fav': FieldValue.arrayRemove([
+                                              FirebaseAuth
+                                                  .instance.currentUser!.uid,
+                                            ]),
+                                          });
+                                        }),
+                                        child: Icon(
+                                          fav.contains(FirebaseAuth
+                                                  .instance.currentUser!.uid)
+                                              ? Icons.bookmark
+                                              : Icons.bookmark_outline_outlined,
+                                          color: fav.contains(FirebaseAuth
+                                                  .instance.currentUser!.uid)
+                                              ? Theme.of(context).primaryColor
+                                              : Colors.black,
+                                        ),
+                                      )
                               ],
                             ),
                             const SizedBox(height: 15),
