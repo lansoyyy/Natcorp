@@ -1,9 +1,13 @@
+import 'package:badges/badges.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:natcorp/Pages/Call/call_page.dart';
 import 'package:natcorp/Pages/Files/file_page.dart';
 import 'package:natcorp/Pages/favorites/favoMain.dart';
 import 'package:natcorp/Pages/home/home.dart';
 import 'package:natcorp/Pages/profile/profile_page.dart';
+import 'package:natcorp/widgets/text_widget.dart';
 
 class bottomButton extends StatefulWidget {
   const bottomButton({Key? key}) : super(key: key);
@@ -31,12 +35,42 @@ class _bottomButtonState extends State<bottomButton> {
         child: currentScreen,
         bucket: bucket,
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.call, color: Colors.grey),
-        onPressed: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (_) => CallScreen()));
-        },
+      floatingActionButton: Badge(
+        badgeContent: StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection('Interviews')
+                .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+                .snapshots(),
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                print('error');
+                return const Center(child: Text('Error'));
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                print('waiting');
+                return const Padding(
+                  padding: EdgeInsets.only(top: 50),
+                  child: Center(
+                      child: CircularProgressIndicator(
+                    color: Colors.black,
+                  )),
+                );
+              }
+
+              final data = snapshot.requireData;
+              return TextRegular(
+                  text: snapshot.data!.size.toString(),
+                  fontSize: 12,
+                  color: Colors.white);
+            }),
+        child: FloatingActionButton(
+          child: Icon(Icons.call, color: Colors.grey),
+          onPressed: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (_) => CallScreen()));
+          },
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
