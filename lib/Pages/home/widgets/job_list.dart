@@ -58,13 +58,16 @@ class _JobListState extends State<JobList> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.jobType);
     return SingleChildScrollView(
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 15),
         height: 550,
         child: StreamBuilder<QuerySnapshot>(
-            stream:
-                FirebaseFirestore.instance.collection('Company').snapshots(),
+            stream: FirebaseFirestore.instance
+                .collection('Company')
+                .where('position', isEqualTo: widget.jobType)
+                .snapshots(),
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.hasError) {

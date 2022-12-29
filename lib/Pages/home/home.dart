@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:natcorp/Pages/home/widgets/home_app_bar.dart';
 import 'package:natcorp/Pages/home/widgets/job_list.dart';
@@ -20,6 +21,8 @@ class _HomePageState extends State<HomePage> {
   ];
 
   var selected = 0;
+
+  late String jobType = '';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,47 +48,75 @@ class _HomePageState extends State<HomePage> {
               children: [
                 HomeAppBar(),
                 SearchCard(),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  height: 40,
-                  child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) => GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                selected = index;
-                              });
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 20),
-                              decoration: BoxDecoration(
-                                  color: selected == index
-                                      ? Theme.of(context)
-                                          .primaryColor
-                                          .withOpacity(0.2)
-                                      : Colors.white,
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(
-                                    color: selected == index
-                                        ? Theme.of(context).primaryColor
-                                        : Theme.of(context)
-                                            .primaryColor
-                                            .withOpacity(0.2),
-                                  )),
-                              child: Text(tagsList[index]),
-                            ),
-                          ),
-                      separatorBuilder: (_, index) => const SizedBox(
-                            width: 15,
-                          ),
-                      itemCount: tagsList.length),
-                ),
+                StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('Job')
+                        .snapshots(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (snapshot.hasError) {
+                        print('error');
+                        return const Center(child: Text('Error'));
+                      }
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        print('waiting');
+                        return const Padding(
+                          padding: EdgeInsets.only(top: 50),
+                          child: Center(
+                              child: CircularProgressIndicator(
+                            color: Colors.black,
+                          )),
+                        );
+                      }
+
+                      final data = snapshot.requireData;
+                      return SizedBox(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 25),
+                          height: 40,
+                          child: ListView.separated(
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (context, index) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      selected = index;
+                                      jobType = data.docs[index]['name'];
+                                    });
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 10, horizontal: 20),
+                                    decoration: BoxDecoration(
+                                        color: selected == index
+                                            ? Theme.of(context)
+                                                .primaryColor
+                                                .withOpacity(0.2)
+                                            : Colors.white,
+                                        borderRadius: BorderRadius.circular(20),
+                                        border: Border.all(
+                                          color: selected == index
+                                              ? Theme.of(context).primaryColor
+                                              : Theme.of(context)
+                                                  .primaryColor
+                                                  .withOpacity(0.2),
+                                        )),
+                                    child: Text(data.docs[index]['name']),
+                                  ),
+                                );
+                              },
+                              separatorBuilder: (_, index) => const SizedBox(
+                                    width: 15,
+                                  ),
+                              itemCount: data.size),
+                        ),
+                      );
+                    }),
                 NatCorpDetails(),
                 Work(),
                 JobList(
                   inNotif: false,
-                  jobType: '',
+                  jobType: jobType,
                 ),
               ],
             ),
