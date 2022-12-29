@@ -16,25 +16,29 @@ class JobList extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 15),
         height: 550,
-        child: ListView.separated(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            scrollDirection: Axis.vertical,
-            itemBuilder: (context, index) => GestureDetector(
-                onTap: () {
-                  showModalBottomSheet(
-                      backgroundColor: Colors.transparent,
-                      isScrollControlled: true,
-                      context: context,
-                      builder: (context) => JobDetail(jobList[index]));
-                },
-                child: JobItem(
-                  jobList[index],
-                  inNotif: inNotif!,
-                )),
-            separatorBuilder: (_, index) => const SizedBox(
-                  height: 15,
-                ),
-            itemCount: jobList.length),
+        child: StreamBuilder<Object>(
+            stream: null,
+            builder: (context, snapshot) {
+              return ListView.separated(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  scrollDirection: Axis.vertical,
+                  itemBuilder: (context, index) => GestureDetector(
+                      onTap: () {
+                        showModalBottomSheet(
+                            backgroundColor: Colors.transparent,
+                            isScrollControlled: true,
+                            context: context,
+                            builder: (context) => JobDetail(jobList[index]));
+                      },
+                      child: JobItem(
+                        jobList[index],
+                        inNotif: inNotif!,
+                      )),
+                  separatorBuilder: (_, index) => const SizedBox(
+                        height: 15,
+                      ),
+                  itemCount: jobList.length);
+            }),
       ),
     );
   }
