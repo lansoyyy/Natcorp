@@ -1,11 +1,30 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:natcorp/Pages/Call/interview_screen.dart';
+import 'package:natcorp/calls/join_screen.dart';
 import 'package:natcorp/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
 
-class CallScreen extends StatelessWidget {
-  const CallScreen({Key? key}) : super(key: key);
+import '../../services/repositories/configs/api.dart';
+
+class CallScreen extends StatefulWidget {
+  CallScreen({Key? key}) : super(key: key);
+
+  @override
+  State<CallScreen> createState() => _CallScreenState();
+}
+
+class _CallScreenState extends State<CallScreen> {
+  String meetingId = "";
+
+  bool isMeetingActive = false;
+
+  late final void Function() onJoinMeetingButtonPressed;
+  late final void Function(String) onMeetingIdChanged;
+
+  final box = GetStorage();
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +84,14 @@ class CallScreen extends StatelessWidget {
                       child: Row(
                         children: [
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              box.write('meetingId',
+                                  data.docs[index]['interviewCode']);
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => VideoSDKQuickStart()));
+                            },
                             icon: const Icon(
                               Icons.video_call_outlined,
                               size: 32,
