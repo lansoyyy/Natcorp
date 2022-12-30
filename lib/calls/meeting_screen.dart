@@ -82,6 +82,8 @@ class _MeetingScreenState extends State<MeetingScreen> {
     room.join();
   }
 
+  bool disableCam = false;
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class MeetingControls extends StatelessWidget {
+class MeetingControls extends StatefulWidget {
   final void Function() onToggleMicButtonPressed;
   final void Function() onToggleCameraButtonPressed;
   final void Function() onLeaveButtonPressed;
@@ -11,6 +11,15 @@ class MeetingControls extends StatelessWidget {
     required this.onToggleCameraButtonPressed,
     required this.onLeaveButtonPressed,
   }) : super(key: key);
+
+  @override
+  State<MeetingControls> createState() => _MeetingControlsState();
+}
+
+class _MeetingControlsState extends State<MeetingControls> {
+  bool isClickedCam = false;
+
+  bool isClickedCamMic = false;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +35,7 @@ class MeetingControls extends StatelessWidget {
                 BoxDecoration(color: Colors.red, shape: BoxShape.circle),
             child: IconButton(
               onPressed: () {
-                onLeaveButtonPressed();
+                widget.onLeaveButtonPressed();
               },
               icon: Icon(
                 Icons.call_end_outlined,
@@ -44,12 +53,20 @@ class MeetingControls extends StatelessWidget {
                 BoxDecoration(color: Colors.blue, shape: BoxShape.circle),
             child: IconButton(
               onPressed: () {
-                onToggleMicButtonPressed();
+                widget.onToggleMicButtonPressed();
+                setState(() {
+                  isClickedCamMic = !isClickedCamMic;
+                });
               },
-              icon: Icon(
-                Icons.mic,
-                color: Colors.white,
-              ),
+              icon: isClickedCamMic
+                  ? Icon(
+                      Icons.mic_off_rounded,
+                      color: Colors.white,
+                    )
+                  : Icon(
+                      Icons.mic,
+                      color: Colors.white,
+                    ),
             ),
           ),
           SizedBox(
@@ -62,12 +79,20 @@ class MeetingControls extends StatelessWidget {
                 BoxDecoration(color: Colors.blue, shape: BoxShape.circle),
             child: IconButton(
               onPressed: () {
-                onToggleCameraButtonPressed();
+                widget.onToggleCameraButtonPressed();
+                setState(() {
+                  isClickedCam = !isClickedCam;
+                });
               },
-              icon: Icon(
-                Icons.camera,
-                color: Colors.white,
-              ),
+              icon: isClickedCam
+                  ? Icon(
+                      Icons.videocam,
+                      color: Colors.white,
+                    )
+                  : Icon(
+                      Icons.videocam_off_outlined,
+                      color: Colors.white,
+                    ),
             ),
           ),
         ],
