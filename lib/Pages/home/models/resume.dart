@@ -273,44 +273,54 @@ class _RegistrationScreenState extends State<ResumeScreen> {
               padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
               minWidth: MediaQuery.of(context).size.width,
               onPressed: () {
-                print(box.read('compId'));
-                // signUp(email.text, password.text);
+                if (firstName.text == '' ||
+                    lastName.text == '' ||
+                    secondName.text == '' ||
+                    email.text == '' ||
+                    address.text == '' ||
+                    age.text == '') {
+                  Fluttertoast.showToast(
+                      msg: 'Cannot Procceed!\nIncomplete Fields!');
+                } else {
+                  print(box.read('compId'));
+                  // signUp(email.text, password.text);
 
-                addForm(
-                    firstName.text,
-                    secondName.text,
-                    lastName.text,
-                    email.text,
-                    age.text,
-                    address.text,
-                    num.text,
-                    gender,
-                    pos.text,
-                    box.read('compId'),
-                    box.read('compName'),
-                    box.read('compLogo'),
-                    data['NSO'],
-                    data['NBI'],
-                    data['Diploma'],
-                    data['COE'],
-                    data['SSS'],
-                    data['Philhealth'],
-                    data['Pag-ibig'],
-                    data['TIN'],
-                    data['TOR'],
-                    data['Brgy Clearance'],
-                    data['Police Clearance'],
-                    data['Vaccine Card'],
-                    data['profile']);
+                  addForm(
+                      firstName.text,
+                      secondName.text,
+                      lastName.text,
+                      email.text,
+                      age.text,
+                      address.text,
+                      num.text,
+                      gender,
+                      pos.text,
+                      box.read('compId'),
+                      box.read('compName'),
+                      box.read('compLogo'),
+                      data['NSO'],
+                      data['NBI'],
+                      data['Diploma'],
+                      data['COE'],
+                      data['SSS'],
+                      data['Philhealth'],
+                      data['Pag-ibig'],
+                      data['TIN'],
+                      data['TOR'],
+                      data['Brgy Clearance'],
+                      data['Police Clearance'],
+                      data['Vaccine Card'],
+                      data['profile']);
 
-                FirebaseFirestore.instance
-                    .collection('users')
-                    .doc(FirebaseAuth.instance.currentUser!.uid)
-                    .update({'status': 'Pending'});
+                  FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(FirebaseAuth.instance.currentUser!.uid)
+                      .update({'status': 'Pending'});
 
-                Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) => const bottomButton()));
-                Fluttertoast.showToast(msg: 'Application Added Succesfully!');
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => const bottomButton()));
+                  Fluttertoast.showToast(msg: 'Application Added Succesfully!');
+                }
               },
               child: const Text(
                 "Continue",
