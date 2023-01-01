@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -17,8 +18,10 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
 
   //editing controller
-  final emailController = TextEditingController();
+
   final passwordController = TextEditingController();
+
+  late String email;
 
   //firebase
   final _auth = FirebaseAuth.instance;
@@ -27,8 +30,10 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     //email field
     final emailField = TextFormField(
+      onChanged: (input) {
+        email = input;
+      },
       autofocus: false,
-      controller: emailController,
       keyboardType: TextInputType.emailAddress,
       validator: (value) {
         if (value!.isEmpty) {
@@ -40,7 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
         return null;
       },
       onSaved: (value) {
-        emailController.text = value!;
+        email = value!;
       },
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
@@ -68,7 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
         return null;
       },
       onSaved: (value) {
-        emailController.text = value!;
+        passwordController.text = value!;
       },
       textInputAction: TextInputAction.done,
       decoration: InputDecoration(
@@ -89,28 +94,47 @@ class _LoginScreenState extends State<LoginScreen> {
         minWidth: MediaQuery.of(context).size.width,
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
-            try {
-              final FirebaseAuth _auth1 = FirebaseAuth.instance;
+            var collection = FirebaseFirestore.instance
+                .collection('users')
+                .where('email', isEqualTo: email);
 
-              var _authenticatedUser = await _auth1.signInWithEmailAndPassword(
-                  email: emailController.text,
-                  password: passwordController.text);
+            var querySnapshot = await collection.get();
+            if (mounted) {
+              setState(() {
+                for (var queryDocumentSnapshot in querySnapshot.docs) {
+                  Map<String, dynamic> data = queryDocumentSnapshot.data();
+
+                  status = data['isBanned'];
+                }
+              });
+            }
+            if (status == true) {
+              Fluttertoast.showToast(
+                  msg: 'Cannot Login! This user is currently banned!');
+            } else {
+              try {
+                final FirebaseAuth auth1 = FirebaseAuth.instance;
+
+                var authenticatedUser = await auth1.signInWithEmailAndPassword(
+                    email: email, password: passwordController.text);
 
 //where _email and _password were simply what the user typed in the textfields.
 
-              if (_authenticatedUser.user!.emailVerified) {
-                Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) => const bottomButton()));
-                //Verified
-              } else {
-                //Not verified
+                if (authenticatedUser.user!.emailVerified == true) {
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => const bottomButton()));
+                  //Verified
+                } else {
+                  //Not verified
 
-                Fluttertoast.showToast(msg: 'Please verify your email!');
+                  Fluttertoast.showToast(msg: 'Please verify your email!');
+                }
+              } catch (e) {
+                Fluttertoast.showToast(msg: e.toString());
               }
-            } catch (e) {
-              Fluttertoast.showToast(msg: e.toString());
             }
           }
+          setState(() {});
         },
         child: const Text(
           "Login",
@@ -202,19 +226,40 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  late bool status;
+
   //login function
   void signIn(String email, String password) async {
     if (_formKey.currentState!.validate()) {
-      await _auth
-          .signInWithEmailAndPassword(email: email, password: password)
-          .then((uid) => {
-                Fluttertoast.showToast(msg: "Login Successful"),
-                Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) => const bottomButton())),
-              })
-          .catchError((e) {
-        Fluttertoast.showToast(msg: e!.message);
-      });
+      var collection = FirebaseFirestore.instance
+          .collection('users')
+          .where('email', isEqualTo: email);
+
+      var querySnapshot = await collection.get();
+      if (mounted) {
+        setState(() {
+          for (var queryDocumentSnapshot in querySnapshot.docs) {
+            Map<String, dynamic> data = queryDocumentSnapshot.data();
+
+            status = data['isBanned'];
+          }
+        });
+      }
+      if (status == true) {
+        Fluttertoast.showToast(
+            msg: 'Cannot Login! This user is currently banned!');
+      } else {
+        await _auth
+            .signInWithEmailAndPassword(email: email, password: password)
+            .then((uid) => {
+                  Fluttertoast.showToast(msg: "Login Successful"),
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => const bottomButton())),
+                })
+            .catchError((e) {
+          Fluttertoast.showToast(msg: e!.message);
+        });
+      }
     }
   }
 }

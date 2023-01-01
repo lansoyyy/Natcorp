@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:natcorp/Pages/sign%20up/model/user_model.dart';
 import 'package:natcorp/widgets/agreement_page.dart';
-import 'package:natcorp/widgets/verification_page.dart';
+
+import '../../widgets/verification_page.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({Key? key}) : super(key: key);
@@ -14,6 +15,15 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  String name1 = '';
+  String email1 = '';
+  String birthdate1 = '';
+
   final _auth = FirebaseAuth.instance;
   //form key
   final _formKey = GlobalKey<FormState>();
@@ -198,19 +208,41 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       child: MaterialButton(
         padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         minWidth: MediaQuery.of(context).size.width,
-        onPressed: () {
+        onPressed: () async {
           if (_formKey.currentState!.validate()) {
-            try {
-              _auth
-                  .createUserWithEmailAndPassword(
-                      email: email.text, password: password.text)
-                  .then((_) {
-                postDetailsToFirestore();
-                Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => VerifyScreen()));
+            var collection = FirebaseFirestore.instance
+                .collection('Ban')
+                .where('email', isEqualTo: email.text);
+
+            var querySnapshot = await collection.get();
+            if (mounted) {
+              setState(() {
+                for (var queryDocumentSnapshot in querySnapshot.docs) {
+                  Map<String, dynamic> data = queryDocumentSnapshot.data();
+
+                  name1 = data['name'];
+                  birthdate1 = data['birthdate'];
+                }
               });
-            } catch (e) {
-              Fluttertoast.showToast(msg: e.toString());
+            }
+
+            if (name1 == '${firstName.text} ${secondName.text}' &&
+                birthdate1 == birthdate.text) {
+              Fluttertoast.showToast(
+                  msg: 'Cannot procceed! This user is currently banned!');
+            } else {
+              try {
+                _auth
+                    .createUserWithEmailAndPassword(
+                        email: email.text, password: password.text)
+                    .then((_) {
+                  postDetailsToFirestore();
+                  Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (context) => VerifyScreen()));
+                });
+              } catch (e) {
+                Fluttertoast.showToast(msg: e.toString());
+              }
             }
           }
         },
