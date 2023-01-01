@@ -36,27 +36,27 @@ class _VideoSDKQuickStartState extends State<VideoSDKQuickStart> {
           },
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: isMeetingActive
-            ? MeetingScreen(
-                meetingId: meetingId,
-                token: token,
-                leaveMeeting: () {
-                  setState(() => isMeetingActive = false);
-                },
-              )
-            : JoinScreen(
-                onMeetingIdChanged: (value) => meetingId = value,
-                onCreateMeetingButtonPressed: () async {
-                  meetingId = await createMeeting();
-                  setState(() => isMeetingActive = true);
-                },
-                onJoinMeetingButtonPressed: () {
-                  setState(() => isMeetingActive = true);
-                },
-              ),
-      ),
+      // body: Padding(
+      //   padding: const EdgeInsets.all(16.0),
+      //   child: isMeetingActive
+      //       ? MeetingScreen(
+      //           meetingId: meetingId,
+      //           token: token,
+      //           leaveMeeting: () {
+      //             setState(() => isMeetingActive = false);
+      //           },
+      //         )
+      //       : JoinScreen(
+      //           onMeetingIdChanged: (value) => meetingId = value,
+      //           onCreateMeetingButtonPressed: () async {
+      //             meetingId = await createMeeting();
+      //             setState(() => isMeetingActive = true);
+      //           },
+      //           onJoinMeetingButtonPressed: () {
+      //             setState(() => isMeetingActive = true);
+      //           },
+      //         ),
+      // ),
     );
   }
 }
@@ -103,8 +103,8 @@ class JoinScreen extends StatelessWidget {
             color: AppColors.Kgradient1,
             height: 50,
             minWidth: 200,
-            child: TextBold(text: 'Join', fontSize: 18, color: Colors.white),
             onPressed: onJoinMeetingButtonPressed,
+            child: TextBold(text: 'Join', fontSize: 18, color: Colors.white),
           )
         ],
       ),
