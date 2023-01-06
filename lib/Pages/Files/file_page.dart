@@ -121,111 +121,113 @@ class _FilesScreenState extends State<FilesScreen> {
           title: TextBold(text: 'My Files', fontSize: 24, color: Colors.white),
         ),
         backgroundColor: Colors.white,
-        body: Container(
-          color: Colors.white,
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Form(
-              key: formKey,
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Center(
-                      child: SizedBox(
-                        height: 150,
-                        child:
-                            Image.asset("assets/logo.png", fit: BoxFit.contain),
+        body: SingleChildScrollView(
+          child: Container(
+            color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Form(
+                key: formKey,
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Center(
+                        child: SizedBox(
+                          height: 150,
+                          child: Image.asset("assets/logo.png",
+                              fit: BoxFit.contain),
+                        ),
                       ),
-                    ),
-                    StreamBuilder<DocumentSnapshot>(
-                        stream: userData,
-                        builder: (context,
-                            AsyncSnapshot<DocumentSnapshot> snapshot) {
-                          if (!snapshot.hasData) {
-                            return const Center(
-                                child: CircularProgressIndicator());
-                          } else if (snapshot.hasError) {
-                            return const Center(
-                                child: Text('Something went wrong'));
-                          } else if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Center(
-                                child: CircularProgressIndicator());
-                          }
+                      StreamBuilder<DocumentSnapshot>(
+                          stream: userData,
+                          builder: (context,
+                              AsyncSnapshot<DocumentSnapshot> snapshot) {
+                            if (!snapshot.hasData) {
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            } else if (snapshot.hasError) {
+                              return const Center(
+                                  child: Text('Something went wrong'));
+                            } else if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            }
 
-                          dynamic data = snapshot.data;
+                            dynamic data = snapshot.data;
 
-                          print(data);
-                          return SizedBox(
-                            height: 400,
-                            child: ListView.builder(
-                                itemCount: filesList.length,
-                                itemBuilder: ((context, index) {
-                                  print(data[filesList[index]]);
-                                  return Padding(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(0, 5, 0, 5),
-                                    child: SizedBox(
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Card(
-                                            elevation: 3,
-                                            child: SizedBox(
-                                                height: 40,
-                                                width: 200,
-                                                child: Center(
-                                                  child: TextRegular(
-                                                      text: filesList[index],
-                                                      fontSize: 18,
-                                                      color: Colors.black),
-                                                )),
-                                          ),
-                                          const SizedBox(
-                                            width: 10,
-                                          ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              uploadPicture(
-                                                  'gallery', filesList[index]);
-                                            },
-                                            child: const Card(
+                            print(data);
+                            return SizedBox(
+                              height: 400,
+                              child: ListView.builder(
+                                  itemCount: filesList.length,
+                                  itemBuilder: ((context, index) {
+                                    print(data[filesList[index]]);
+                                    return Padding(
+                                      padding:
+                                          const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                                      child: SizedBox(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Card(
                                               elevation: 3,
                                               child: SizedBox(
                                                   height: 40,
-                                                  width: 50,
+                                                  width: 200,
                                                   child: Center(
-                                                    child: Icon(Icons
-                                                        .add_circle_outline_rounded),
+                                                    child: TextRegular(
+                                                        text: filesList[index],
+                                                        fontSize: 18,
+                                                        color: Colors.black),
                                                   )),
                                             ),
-                                          ),
-                                          const SizedBox(
-                                            width: 5,
-                                          ),
-                                          data[filesList[index]] == ''
-                                              ? const SizedBox()
-                                              : Container(
-                                                  decoration: BoxDecoration(
-                                                      color: Colors.black,
-                                                      image: DecorationImage(
-                                                          fit: BoxFit.cover,
-                                                          image: NetworkImage(
-                                                              data[filesList[
-                                                                  index]]))),
-                                                  height: 30,
-                                                  width: 30,
-                                                ),
-                                        ],
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                uploadPicture('gallery',
+                                                    filesList[index]);
+                                              },
+                                              child: const Card(
+                                                elevation: 3,
+                                                child: SizedBox(
+                                                    height: 40,
+                                                    width: 50,
+                                                    child: Center(
+                                                      child: Icon(Icons
+                                                          .add_circle_outline_rounded),
+                                                    )),
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              width: 5,
+                                            ),
+                                            data[filesList[index]] == ''
+                                                ? const SizedBox()
+                                                : Container(
+                                                    decoration: BoxDecoration(
+                                                        color: Colors.black,
+                                                        image: DecorationImage(
+                                                            fit: BoxFit.cover,
+                                                            image: NetworkImage(
+                                                                data[filesList[
+                                                                    index]]))),
+                                                    height: 30,
+                                                    width: 30,
+                                                  ),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                })),
-                          );
-                        }),
-                  ]),
+                                    );
+                                  })),
+                            );
+                          }),
+                    ]),
+              ),
             ),
           ),
         ));

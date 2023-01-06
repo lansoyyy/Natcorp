@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:natcorp/Pages/sign%20up/model/user_model.dart';
 import 'package:natcorp/widgets/agreement_page.dart';
-import 'package:natcorp/widgets/verification_page.dart';
+
+import '../../widgets/verification_page.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({Key? key}) : super(key: key);
@@ -14,6 +15,15 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  String name1 = '';
+  String email1 = '';
+  String birthdate1 = '';
+
   final _auth = FirebaseAuth.instance;
   //form key
   final _formKey = GlobalKey<FormState>();
@@ -202,6 +212,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           late String fname = '';
           late String sname = '';
           late String bday = '';
+          late bool isBanned;
           var collection = FirebaseFirestore.instance
               .collection('users')
               .where('email', isEqualTo: email.text);
@@ -216,15 +227,17 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   fname = data['firstName'];
                   sname = data['secondName'];
                   bday = data['birthdate'];
+                  isBanned = data['isBanned'];
                 }
               });
             }
 
-            if (firstName.text == fname &&
+            if (isBanned == true) {
+              Fluttertoast.showToast(msg: 'This user is banned');
+            } else if (firstName.text == fname &&
                 secondName.text == sname &&
                 birthdate.text == bday) {
-              Fluttertoast.showToast(
-                  msg: 'This user already existed or currently banned');
+              Fluttertoast.showToast(msg: 'This user already existed');
             } else {
               try {
                 await _auth

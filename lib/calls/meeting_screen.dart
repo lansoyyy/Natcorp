@@ -40,18 +40,18 @@ class _MeetingScreenState extends State<MeetingScreen> {
     });
   }
 
-  void setMeetingEventListener(Room _room) {
-    setParticipantStreamEvents(_room.localParticipant);
-    _room.on(
+  void setMeetingEventListener(Room room) {
+    setParticipantStreamEvents(room.localParticipant);
+    room.on(
       Events.participantJoined,
       (Participant participant) => setParticipantStreamEvents(participant),
     );
-    _room.on(Events.participantLeft, (String participantId) {
+    room.on(Events.participantLeft, (String participantId) {
       if (participantVideoStreams.containsKey(participantId)) {
         setState(() => participantVideoStreams.remove(participantId));
       }
     });
-    _room.on(Events.roomLeft, () {
+    room.on(Events.roomLeft, () {
       participantVideoStreams.clear();
       widget.leaveMeeting();
     });

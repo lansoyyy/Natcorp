@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:natcorp/Pages/login/login_page.dart';
 
 class ForgotPassword extends StatefulWidget {
@@ -51,12 +52,18 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
           minWidth: MediaQuery.of(context).size.width,
           onPressed: () async {
-            await (FirebaseAuth.instance
-                .sendPasswordResetEmail(email: _emailController.text)
-                .then((value) {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const LoginScreen()));
-            }));
+            if (_emailController.text == '') {
+              Fluttertoast.showToast(msg: 'Email is needed');
+            } else {
+              await (FirebaseAuth.instance
+                  .sendPasswordResetEmail(email: _emailController.text)
+                  .then((value) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const LoginScreen()));
+              }));
+            }
           },
           child: const Text(
             "Send Code",

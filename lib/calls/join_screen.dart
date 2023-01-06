@@ -103,8 +103,8 @@ class JoinScreen extends StatelessWidget {
             color: AppColors.Kgradient1,
             height: 50,
             minWidth: 200,
-            child: TextBold(text: 'Join', fontSize: 18, color: Colors.white),
             onPressed: onJoinMeetingButtonPressed,
+            child: TextBold(text: 'Join', fontSize: 18, color: Colors.white),
           )
         ],
       ),
