@@ -24,6 +24,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   String email1 = '';
   String birthdate1 = '';
 
+  late String fname = '';
+  late String sname = '';
+  late String bday = '';
+  late bool isBanned;
+
   final _auth = FirebaseAuth.instance;
   //form key
   final _formKey = GlobalKey<FormState>();
@@ -209,10 +214,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         minWidth: MediaQuery.of(context).size.width,
         onPressed: () async {
-          late String fname = '';
-          late String sname = '';
-          late String bday = '';
-          late bool isBanned;
           var collection = FirebaseFirestore.instance
               .collection('users')
               .where('email', isEqualTo: email.text);
