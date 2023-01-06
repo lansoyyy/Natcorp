@@ -198,19 +198,46 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       child: MaterialButton(
         padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         minWidth: MediaQuery.of(context).size.width,
-        onPressed: () {
+        onPressed: () async {
+          late String fname = '';
+          late String sname = '';
+          late String bday = '';
+          var collection = FirebaseFirestore.instance
+              .collection('users')
+              .where('email', isEqualTo: email.text);
+
+          var querySnapshot = await collection.get();
+
           if (_formKey.currentState!.validate()) {
-            try {
-              _auth
-                  .createUserWithEmailAndPassword(
-                      email: email.text, password: password.text)
-                  .then((_) {
-                postDetailsToFirestore();
-                Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => VerifyScreen()));
+            if (mounted) {
+              setState(() {
+                for (var queryDocumentSnapshot in querySnapshot.docs) {
+                  Map<String, dynamic> data = queryDocumentSnapshot.data();
+                  fname = data['firstName'];
+                  sname = data['secondName'];
+                  bday = data['birthdate'];
+                }
               });
-            } catch (e) {
-              Fluttertoast.showToast(msg: e.toString());
+            }
+
+            if (firstName.text == fname &&
+                secondName.text == sname &&
+                birthdate.text == bday) {
+              Fluttertoast.showToast(
+                  msg: 'This user already existed or currently banned');
+            } else {
+              try {
+                await _auth
+                    .createUserWithEmailAndPassword(
+                        email: email.text, password: password.text)
+                    .then((_) {
+                  postDetailsToFirestore();
+                  Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (context) => VerifyScreen()));
+                });
+              } catch (e) {
+                Fluttertoast.showToast(msg: e.toString());
+              }
             }
           }
         },
