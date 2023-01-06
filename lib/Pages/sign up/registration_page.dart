@@ -27,6 +27,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   late String fname = '';
   late String sname = '';
   late String bday = '';
+  late String thisEmail = '';
   late bool isBanned;
 
   final _auth = FirebaseAuth.instance;
@@ -237,12 +238,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               Fluttertoast.showToast(msg: 'This user is banned');
             } else if (firstName.text == fname &&
                 secondName.text == sname &&
-                birthdate.text == bday) {
+                birthdate.text == bday &&
+                thisEmail == email.text) {
               Fluttertoast.showToast(msg: 'This user already existed');
-            } else if (isBanned != true &&
-                firstName.text != fname &&
-                secondName.text != sname &&
-                birthdate.text != bday) {
+            } else {
               try {
                 await _auth
                     .createUserWithEmailAndPassword(
@@ -255,9 +254,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               } catch (e) {
                 Fluttertoast.showToast(msg: e.toString());
               }
-            } else {
-              Fluttertoast.showToast(
-                  msg: 'This user already existed or currently banned!');
             }
           }
         },
