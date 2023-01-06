@@ -239,7 +239,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 secondName.text == sname &&
                 birthdate.text == bday) {
               Fluttertoast.showToast(msg: 'This user already existed');
-            } else {
+            } else if (isBanned != true &&
+                firstName.text != fname &&
+                secondName.text != sname &&
+                birthdate.text != bday) {
               try {
                 await _auth
                     .createUserWithEmailAndPassword(
@@ -252,6 +255,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               } catch (e) {
                 Fluttertoast.showToast(msg: e.toString());
               }
+            } else {
+              Fluttertoast.showToast(
+                  msg: 'This user already existed or currently banned!');
             }
           }
         },
