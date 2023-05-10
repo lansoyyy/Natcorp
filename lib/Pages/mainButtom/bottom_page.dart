@@ -1,4 +1,4 @@
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as b;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +23,7 @@ class _bottomButtonState extends State<bottomButton> {
     FilesScreen(),
     CallScreen(),
     FavoriteNew(),
-    ProfileScreen()
+    const ProfileScreen()
   ];
 
   final PageStorageBucket bucket = PageStorageBucket();
@@ -32,10 +32,10 @@ class _bottomButtonState extends State<bottomButton> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: PageStorage(
-        child: currentScreen,
         bucket: bucket,
+        child: currentScreen,
       ),
-      floatingActionButton: Badge(
+      floatingActionButton: b.Badge(
         badgeContent: StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance
                 .collection('Interviews')
@@ -66,7 +66,7 @@ class _bottomButtonState extends State<bottomButton> {
                   color: Colors.white);
             }),
         child: FloatingActionButton(
-          child: Icon(Icons.call, color: Colors.grey),
+          child: const Icon(Icons.call, color: Colors.grey),
           onPressed: () {
             Navigator.push(
                 context, MaterialPageRoute(builder: (_) => CallScreen()));
@@ -75,9 +75,9 @@ class _bottomButtonState extends State<bottomButton> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
-        shape: CircularNotchedRectangle(),
+        shape: const CircularNotchedRectangle(),
         notchMargin: 10,
-        child: Container(
+        child: SizedBox(
           height: 60,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -98,14 +98,15 @@ class _bottomButtonState extends State<bottomButton> {
                       children: [
                         Icon(
                           Icons.home,
-                          color:
-                              currentTab == 0 ? Color(0xFF43B1B7) : Colors.grey,
+                          color: currentTab == 0
+                              ? const Color(0xFF43B1B7)
+                              : Colors.grey,
                         ),
                         Text(
                           'Home',
                           style: TextStyle(
                               color: currentTab == 0
-                                  ? Color(0xFF43B1B7)
+                                  ? const Color(0xFF43B1B7)
                                   : Colors.grey),
                         )
                       ],
@@ -124,14 +125,15 @@ class _bottomButtonState extends State<bottomButton> {
                       children: [
                         Icon(
                           Icons.cases,
-                          color:
-                              currentTab == 1 ? Color(0xFF43B1B7) : Colors.grey,
+                          color: currentTab == 1
+                              ? const Color(0xFF43B1B7)
+                              : Colors.grey,
                         ),
                         Text(
                           'Files',
                           style: TextStyle(
                               color: currentTab == 1
-                                  ? Color(0xFF43B1B7)
+                                  ? const Color(0xFF43B1B7)
                                   : Colors.grey),
                         )
                       ],
@@ -155,14 +157,15 @@ class _bottomButtonState extends State<bottomButton> {
                       children: [
                         Icon(
                           Icons.bookmark_outline_outlined,
-                          color:
-                              currentTab == 3 ? Color(0xFF43B1B7) : Colors.grey,
+                          color: currentTab == 3
+                              ? const Color(0xFF43B1B7)
+                              : Colors.grey,
                         ),
                         Text(
                           'Favorite',
                           style: TextStyle(
                               color: currentTab == 3
-                                  ? Color(0xFF43B1B7)
+                                  ? const Color(0xFF43B1B7)
                                   : Colors.grey),
                         )
                       ],
@@ -172,7 +175,7 @@ class _bottomButtonState extends State<bottomButton> {
                     minWidth: 40,
                     onPressed: () {
                       setState(() {
-                        currentScreen = ProfileScreen();
+                        currentScreen = const ProfileScreen();
                         currentTab = 4;
                       });
                     },
@@ -181,14 +184,15 @@ class _bottomButtonState extends State<bottomButton> {
                       children: [
                         Icon(
                           Icons.person,
-                          color:
-                              currentTab == 4 ? Color(0xFF43B1B7) : Colors.grey,
+                          color: currentTab == 4
+                              ? const Color(0xFF43B1B7)
+                              : Colors.grey,
                         ),
                         Text(
                           'Profile',
                           style: TextStyle(
                               color: currentTab == 4
-                                  ? Color(0xFF43B1B7)
+                                  ? const Color(0xFF43B1B7)
                                   : Colors.grey),
                         )
                       ],

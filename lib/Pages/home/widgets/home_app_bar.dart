@@ -1,4 +1,4 @@
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as b;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +10,8 @@ class HomeAppBar extends StatelessWidget {
       .collection('users')
       .doc(FirebaseAuth.instance.currentUser!.uid)
       .snapshots();
+
+  HomeAppBar({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -26,12 +28,12 @@ class HomeAppBar extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'Welcome home',
                   style: TextStyle(
                       color: Colors.grey, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 StreamBuilder<DocumentSnapshot>(
@@ -50,7 +52,7 @@ class HomeAppBar extends StatelessWidget {
                       dynamic data = snapshot.data;
                       return Text(
                         data['firstName'],
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 28),
                       );
                     })
@@ -60,7 +62,7 @@ class HomeAppBar extends StatelessWidget {
             //Notification
             Row(
               children: [
-                Badge(
+                b.Badge(
                   badgeContent: StreamBuilder<QuerySnapshot>(
                       stream: FirebaseFirestore.instance
                           .collection('Company')
